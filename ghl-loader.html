@@ -1,0 +1,62 @@
+<!--
+  HUFNOR SITE LOADER — paste this ONCE into the GoHighLevel "Custom Code" element (replace everything).
+  It fetches index.html from GitHub (Hufnor/hufnor-site, main) and runs it in this page,
+  so publishing = committing index.html. Nothing else ever needs to change in GHL.
+  Sources, in order: raw.githubusercontent.com (≈5 min cache) → jsDelivr (backup CDN).
+  If both fail, visitors see a short message with the email address.
+-->
+<div id="hufnor-root" style="min-height:100vh;background:#E7E8E3"></div>
+<script>
+(function () {
+  var REPO = 'Hufnor/hufnor-site', BRANCH = 'main', FILE = 'index.html';
+  var SOURCES = [
+    'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH + '/' + FILE,
+    'https://cdn.jsdelivr.net/gh/' + REPO + '@' + BRANCH + '/' + FILE
+  ];
+  var EMAIL = 'blackridgedesign.kc@gmail.com';
+  var root = document.getElementById('hufnor-root');
+  if (!root || root.getAttribute('data-loaded')) return;
+  root.setAttribute('data-loaded', '1');
+
+  function get(i) {
+    if (i >= SOURCES.length) return Promise.reject(new Error('all sources failed'));
+    return fetch(SOURCES[i], { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    }).then(function (t) {
+      if (t.indexOf('id="br-data"') < 0) throw new Error('not the site file');
+      return t;
+    }).catch(function () { return get(i + 1); });
+  }
+
+  function mount(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var t = doc.querySelector('title');
+    if (t) document.title = t.textContent;
+    Array.prototype.forEach.call(doc.head.children, function (el) {
+      if (el.tagName === 'TITLE' || el.tagName === 'SCRIPT') return;
+      document.head.appendChild(document.importNode(el, true));
+    });
+    if (t) document.head.appendChild(document.importNode(t, true));
+    root.removeAttribute('style');
+    var nodes = Array.prototype.slice.call(doc.body.childNodes);
+    nodes.forEach(function (n) {
+      if (n.nodeName === 'SCRIPT') {
+        var s = document.createElement('script');
+        Array.prototype.forEach.call(n.attributes, function (a) { s.setAttribute(a.name, a.value); });
+        s.textContent = n.textContent;
+        root.appendChild(s);              // inline scripts run here, in order
+      } else {
+        root.appendChild(document.importNode(n, true));
+      }
+    });
+  }
+
+  get(0).then(mount).catch(function () {
+    root.innerHTML = '<div style="max-width:560px;margin:0 auto;padding:80px 24px;font:16px/1.5 system-ui,sans-serif;color:#101A24">' +
+      '<h1 style="font-size:26px;margin:0 0 12px">Hufnor Design</h1>' +
+      '<p>The site didn’t load. Please refresh in a moment, or email us at ' +
+      '<a href="mailto:' + EMAIL + '">' + EMAIL + '</a>.</p></div>';
+  });
+})();
+</script>
