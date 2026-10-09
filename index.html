@@ -3,7 +3,7 @@
   HUFNOR DESIGN — website (single file)
   ==========================================
   HANDOFF NOTES FOR ANY AI (Claude, ChatGPT) OR PERSON EDITING THIS FILE
-  - Live at https://blackridge-design.com. MASTER COPY = index.html in the GitHub repo Hufnor/hufnor-site (main).
+  - Live at https://hufnor.com (main domain since 2026-10-08; blackridge-design.com serves the same loader). MASTER COPY = index.html in the GitHub repo Hufnor/hufnor-site (main).
     The GHL "Custom Code" element holds only ghl-loader.html, which fetches this file from GitHub at page load.
     To publish: commit index.html to main. Live within ~5 minutes (GitHub raw cache). No GHL builder step.
     (Before 2026-10-08 the whole file was pasted into GHL; that is no longer the workflow.)
@@ -30,7 +30,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-br-head="">Hufnor Design | Useful parts, made to fit</title>
 <meta data-br-head="" name="description" content="Functional 3D-printed parts designed by two mechanical engineers and printed to order in Kansas City: Honda Civic (2016–2021) console organizers, IKEA Skadis mounts, Klein MODbox inserts, custom drawer organizers, furniture levelers, Bass Tracker speaker mounts.">
-<link data-br-head="" rel="canonical" href="https://blackridge-design.com/">
+<link data-br-head="" rel="canonical" href="https://hufnor.com/">
 <link data-br-head="" data-br-icon="" rel="icon" type="image/png" href="https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac51704bbad531ac8eed4b2.png">
 <link data-br-head="" rel="apple-touch-icon" href="https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac51704bbad531ac8eed4b2.png">
 <meta data-br-head="" property="og:site_name" content="Hufnor Design">
@@ -293,6 +293,7 @@
   .sw[aria-pressed="true"]{box-shadow:inset 0 0 0 1px rgba(0,0,0,.2),0 0 0 3px var(--quarry),0 0 0 5px var(--ink)}
   .pdp-gallery .color-picker{margin-top:18px}
   .pdp-gallery .color-picker .opt-label{font-size:12px}
+  .stock-note{margin:2px 0 8px;font-size:13px;color:var(--slate)}.stock-note.in{color:#2F6B45}
   .color-picker-swatches{display:flex;flex-wrap:wrap;gap:12px;padding:5px 5px 2px}
   .color-picker-swatches .sw{width:40px;height:40px;margin:0;flex:none}
   .opt-note{font-size:14px;color:var(--slate);margin:10px 0 0}
@@ -559,7 +560,12 @@
     },
     "logoIcon": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac51704bbad531ac8eed4b2.png",
     "shareImage": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac51704c478ac553506e1b2.jpg",
-    "logoLight": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac51704c062e4fb0525d210.jpg"
+    "logoLight": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac51704c062e4fb0525d210.jpg",
+    "stockColors": [
+      "Black",
+      "White"
+    ],
+    "specialColorLead": "adds up to 7 business days"
   },
   "categories": [
     {
@@ -2806,7 +2812,7 @@
     <div class="sec-head"><div><span class="mono">Before you order</span><h2>Questions people ask us.</h2><p>Short answers. Every one of them is also on the product page it applies to.</p></div></div>
     <div class="faq" data-faq>
       <details><summary>Why PETG instead of PLA?</summary><p>PLA softens around 140 °F and a parked car beats that easily. Catalog parts are printed in PETG unless the product page says otherwise, so they hold their shape in a hot cabin, a garage in July or a sunny windowsill.</p></details>
-      <details><summary>How long until it ships?</summary><p>Each part is printed for your order in Lenexa, Kansas. Most parts ship within 5 business days; custom parts ship once you approve the final design. We email tracking when it ships. US addresses only, $5.99 flat per order, shown at checkout.</p></details>
+      <details><summary>How long until it ships?</summary><p>Each part is printed for your order in Lenexa, Kansas. Parts in black or white ship within 5 business days; other colors add up to 7 business days while we order the filament. Custom parts ship once you approve the final design. We email tracking when it ships. US addresses only, $5.99 flat per order, shown at checkout.</p></details>
       <details><summary>Will it fit my car, board or box?</summary><p>Fitment is listed on every product page: the Civic parts fit 2016–2021 sedan, coupe, hatchback, Si and Type R (not the 2022+ 11th generation); the Skadis mounts fit every IKEA Skadis board size; the Klein inserts fit the 54500MBX half-width component box. Not sure? Send a photo and a rough size through the <a href="#/custom">contact form</a> and we’ll tell you before you buy.</p></details>
       <details><summary>What if it doesn’t fit or doesn’t work for me?</summary><p>Tell us within 30 days of delivery. Send it back unused and we refund the part price (shipping isn’t refunded), or we revise the design until it fits. Custom and commissioned parts aren’t returnable, but we keep revising until they’re right. Details on the <a href="#/shipping">shipping &amp; returns</a> page.</p></details>
       <details><summary>What does the warranty cover?</summary><p>One year from the day it ships. Parts under $100 are replaced free (you cover postage); parts over $100 are replaced at the cost of material plus shipping. We ask for a photo of the break or the part itself. The bike mount and the furniture risers carry load, so we inspect the break before sending a replacement. Full terms are in the <a href="#/warranty">warranty</a> section.</p></details>
@@ -2977,7 +2983,7 @@
   <h1 class="h2" style="margin-top:10px">Shipping &amp; returns</h1>
   <p class="lede" style="margin-top:14px;max-width:52ch">Every part is printed for your order in Lenexa, Kansas. Here’s what happens after you check out.</p>
   <div class="terms" style="margin-top:28px">
-    <div class="term"><h3>Shipping</h3><p>US addresses only. $5.99 flat per order, shown at checkout. Most parts ship within 5 business days; custom parts ship once you approve the final design. We email tracking when it ships.</p></div>
+    <div class="term"><h3>Shipping</h3><p>US addresses only. $5.99 flat per order, shown at checkout. Parts in black or white ship within 5 business days; other colors add up to 7 business days while we order the filament. Custom parts ship once you approve the final design. We email tracking when it ships.</p></div>
     <div class="term"><h3>Sales tax</h3><p>Prices on the site don’t include tax. Sales tax is added at checkout wherever we’re required to collect it.</p></div>
     <div class="term"><h3>Changes and cancellations</h3><p>Email us within 24 hours of ordering to change a color or layout, or to cancel for a full refund. After that your part may already be on the printer.</p></div>
     <div class="term"><h3>Returns</h3><p>Doesn’t fit or doesn’t work for your setup? Tell us within 30 days of delivery. Send it back unused and we refund the part price (shipping isn’t refunded), or we revise the design until it fits. Custom and commissioned parts aren’t returnable, but we keep revising until they’re right.</p></div>
@@ -3054,7 +3060,7 @@
 (function(){
   try{
     var D=JSON.parse(document.getElementById('br-data').textContent);
-    var base='https://blackridge-design.com/';
+    var base='https://hufnor.com/';
     var org={"@type":"Organization","@id":base+"#org","name":"Hufnor Design","url":base,"logo":(D.config&&D.config.logo&&D.config.logo.src)||undefined,"email":D.config&&D.config.inbox,"address":{"@type":"PostalAddress","addressLocality":"Lenexa","addressRegion":"KS","addressCountry":"US"}};
     function img(p){var c=(p.colors||[])[0];var i=c&&c.images&&c.images[0];return i&&i.src;}
     var items=(D.products||[]).filter(function(p){return p.price;}).map(function(p,i){
@@ -3153,6 +3159,12 @@
     return p.colors && p.colors.length ? p.colors : Object.keys(DATA.swatches || {}).map(function (name) { return { name: name, hex: swatch(name), opacity: .55 }; });
   }
   function materialColor(i, product) { var list = materialColors(product); return list[Math.max(0, Math.min(i || 0, list.length - 1))] || { name: 'Black', hex: '#23272A', opacity: 0 }; }
+  function colorStockNote(name) {
+    var cfg = DATA.config || {}, stock = cfg.stockColors || [];
+    if (!stock.length) return '';
+    var inStock = stock.some(function (s) { return String(s).toLowerCase() === String(name).toLowerCase(); });
+    return '<p class="stock-note' + (inStock ? ' in' : '') + '">' + (inStock ? 'In stock. Ships within 5 business days.' : 'Ordered for you: we buy this filament after you order, which ' + esc(cfg.specialColorLead || 'adds a few business days') + '. Black and white ship fastest.') + '</p>';
+  }
   function colorPreviewReady(p) { return !!(p && p.colorPreview && p.colorPreview.ready); }
   function imgName(src) {
     if (!src) return 'No image yet';
@@ -3390,7 +3402,7 @@
       (!p.colorImagesReady && pdp.img >= photoCount(p) && colorPreviewReady(p) && tone.name !== 'Black' ? '<span class="shown-in">Previewing ' + esc(tone.name.toLowerCase()) + ' on the product cutout.</span>' : '') + '</div>' +
       (im && im.alt ? '<p class="pdp-cap">' + esc(im.alt) + '</p>' : '') +
       (set.length > 1 ? '<div class="thumbs">' + set.map(function (s, i) { return '<button class="thumb" type="button" data-thumb="' + i + '" aria-pressed="' + (i === pdp.img) + '" aria-label="Photo ' + (i + 1) + '">' + imgTag(s.src, '') + '</button>'; }).join('') + '</div>' : '') +
-      '<div class="opt color-picker"><p class="opt-label">' + esc(palette.label || 'PETG Basic') + ' color: <span>' + esc(tone.name) + '</span></p><div class="color-picker-swatches">' + materialColors(p).map(function (c, i) { return '<button class="sw" type="button" data-matcolor="' + i + '" aria-pressed="' + (i === pdp.matColor) + '" aria-label="' + esc(c.name) + '" title="' + esc(c.name) + '" style="background:' + esc(c.hex || swatch(c.name)) + '"></button>'; }).join('') + '</div><p class="color-preview-note">' + esc(p.colorImagesReady ? 'Real photos show the actual part. Select a color to see its product render; printed color may vary.' : colorPreviewReady(p) ? (palette.note || 'Color preview is approximate.') : 'Color selected: ' + tone.name + '. Object-only preview will turn on after this product has a clean cutout/render or mask.') + '</p></div></div>' +
+      '<div class="opt color-picker"><p class="opt-label">' + esc(palette.label || 'PETG Basic') + ' color: <span>' + esc(tone.name) + '</span></p>' + colorStockNote(tone.name) + '<div class="color-picker-swatches">' + materialColors(p).map(function (c, i) { return '<button class="sw" type="button" data-matcolor="' + i + '" aria-pressed="' + (i === pdp.matColor) + '" aria-label="' + esc(c.name) + '" title="' + esc(c.name) + '" style="background:' + esc(c.hex || swatch(c.name)) + '"></button>'; }).join('') + '</div><p class="color-preview-note">' + esc(p.colorImagesReady ? 'Real photos show the actual part. Select a color to see its product render; printed color may vary.' : colorPreviewReady(p) ? (palette.note || 'Color preview is approximate.') : 'Color selected: ' + tone.name + '. Object-only preview will turn on after this product has a clean cutout/render or mask.') + '</p></div></div>' +
       '<div class="pdp-info"><span class="mono">' + esc((cat(p.category) || {}).name || '') + '</span><h1>' + esc(p.name) + '</h1><p class="pdp-tag">' + esc(p.tagline) + '</p><p class="pdp-desc">' + esc(p.desc) + '</p>' +
       (v ? '<div class="opt"><p class="opt-label">' + esc(p.variantLabel || 'Quantity') + ': <span>' + esc(v.label) + '</span></p><div class="chips">' + p.variants.map(function (x, i) { return '<button class="chip" type="button" data-variant="' + i + '" aria-pressed="' + (i === pdp.variant) + '">' + esc(x.label) + '<small>$' + x.price + '</small></button>'; }).join('') + '</div></div>' : '') +
       (mix ? '<div class="opt mix"><p class="opt-label">' + esc(p.mix.label || 'Pick your layouts') + ': <span>' + mixSum + ' of ' + v.count + '</span></p>' + mixSlots(p, mix, v.count || 1) + p.mix.options.map(function (o) { var n = mix[o.key] || 0; return '<div class="mix-row' + (n ? ' on' : '') + '"><span class="mix-name"><b>' + esc(o.name) + '</b><small>' + esc(o.note || '') + '</small></span><span class="mix-step"><button type="button" data-mix="' + esc(o.key) + '" data-d="-1" aria-label="One fewer ' + esc(o.name) + '"' + (n ? '' : ' disabled') + '>−</button><output>' + n + '</output><button type="button" data-mix="' + esc(o.key) + '" data-d="1" aria-label="One more ' + esc(o.name) + '"' + (mixSum >= p.variants[p.variants.length - 1].count ? ' disabled' : '') + '>+</button></span></div>'; }).join('') + (mixOk ? '' : '<p class="mix-msg">' + (mixSum < v.count ? (mixSum ? 'Pick ' + (v.count - mixSum) + ' more to fill your ' + v.count + '-pack.' : 'Tap + to fill ' + (v.count === 1 ? 'your insert' : 'all ' + v.count + ' slots') + '.') : 'Remove ' + (mixSum - v.count) + '.') + '</p>') + '</div>' : '') +
@@ -3439,7 +3451,7 @@
           (special ? '<p style="margin-top:14px"><b>' + esc(o.status) + '</b> — we’ve emailed you about this order. Questions: <a href="mailto:' + esc(DATA.config.inbox) + '">' + esc(DATA.config.inbox) + '</a>.</p>'
             : '<ol class="order-steps">' + STEPS.map(function (s, i) { return '<li class="' + (i < idx ? 'done' : i === idx ? 'now' : '') + '"><b>' + esc(s) + '</b>' + (i === idx ? '<small>' + esc(o.updated ? 'since ' + o.updated : '') + '</small>' : '') + '</li>'; }).join('') + '</ol>') +
           (o.tracking ? '<p style="margin-top:14px">Tracking: ' + (/^\d{20,22}$/.test(o.tracking) ? '<a href="https://tools.usps.com/go/TrackConfirmAction?tLabels=' + esc(o.tracking) + '" target="_blank" rel="noopener">' + esc(o.tracking) + '</a>' : esc(o.tracking)) + (o.carrier ? ' (' + esc(o.carrier) + ')' : '') + (o.shipped_at ? ' · shipped ' + esc(o.shipped_at) : '') + '</p>' : '') +
-          '</div><p class="pdp-small" style="margin-top:14px">Most parts ship within 5 business days of ordering. Need to change something? Email us with the code — if it hasn’t printed yet, we can.</p>';
+          '</div><p class="pdp-small" style="margin-top:14px">Black and white parts ship within 5 business days of ordering; other colors add up to 7 business days. Need to change something? Email us with the code — if it hasn’t printed yet, we can.</p>';
       })
       .catch(function () { el.innerHTML = '<p class="pdp-small">Couldn’t reach the order list right now. Try again in a minute, or email <a href="mailto:' + esc(DATA.config.inbox) + '">' + esc(DATA.config.inbox) + '</a>.</p>'; });
   }
