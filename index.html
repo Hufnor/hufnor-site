@@ -2722,7 +2722,8 @@
   // Browser tab icon (the ridge mark). GHL's own favicon setting wins if it is set; this fills in when it isn't.
   (function () {
     // GHL's own favicon setting still points at the old Blackridge mark: remove every icon that isn't ours.
-    Array.prototype.forEach.call(document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]'), function (l) { if (!l.hasAttribute('data-br-head')) l.parentNode.removeChild(l); });
+    function dropOld() { Array.prototype.forEach.call(document.querySelectorAll('link[rel*="icon"]'), function (l) { if (!l.hasAttribute('data-br-head') && !l.hasAttribute('data-br-icon')) l.parentNode.removeChild(l); }); }
+    dropOld(); window.addEventListener('load', dropOld); setTimeout(dropOld, 3000);
     if (document.querySelector('link[rel~="icon"][data-br-icon]')) return;
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="14" fill="#F6F6F3" stroke="#111" stroke-width="6"/><text x="50" y="66" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="46" fill="#111">HN</text></svg>';
     var l = document.createElement('link'); l.rel = 'icon'; l.type = 'image/svg+xml'; l.setAttribute('data-br-icon', ''); l.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
