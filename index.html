@@ -312,6 +312,7 @@
   .mix-row.on .mix-name b{color:var(--oxide)}
   .mix-slots{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
   .mix-slots .slot{width:28px;height:28px;border:1.5px dashed var(--line);border-radius:3px;display:grid;place-items:center;font:600 12px var(--f-mono)}
+  .mix-slots .slot{min-height:0;padding:0;cursor:default;overflow:visible}
   .mix-slots .slot.on{border:1.5px solid var(--oxide);background:var(--oxide);color:#fff}
   .mix-msg{margin:10px 0 0;font:600 13px var(--f-body);color:var(--oxide)}
   .buy[disabled]{opacity:.45;cursor:not-allowed}
@@ -868,20 +869,44 @@
       ],
       "photos": [
         {
-          "src": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac2a8927d735ea2a11e86dd.jpg",
-          "alt": "CAD render in black: open insert, one cavity with the stepped notches on the long sides"
+          "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-open-black.jpg",
+          "alt": "CAD render in black: open insert, one cavity with the stepped notches on the long sides",
+          "byColor": {
+            "White": {
+              "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-open-white.jpg",
+              "alt": "CAD render in white: open insert, one cavity with the stepped notches on the long sides"
+            }
+          }
         },
         {
-          "src": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac2a8927d735ea2a11e86ce.jpg",
-          "alt": "CAD render in black: insert split lengthwise into two long compartments"
+          "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-split-length-black.jpg",
+          "alt": "CAD render in black: insert split lengthwise into two long compartments",
+          "byColor": {
+            "White": {
+              "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-split-length-white.jpg",
+              "alt": "CAD render in white: insert split lengthwise into two long compartments"
+            }
+          }
         },
         {
-          "src": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac2a892bbad531ac8ac4edf.jpg",
-          "alt": "CAD render in black: insert split crosswise into two short compartments"
+          "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-split-cross-black.jpg",
+          "alt": "CAD render in black: insert split crosswise into two short compartments",
+          "byColor": {
+            "White": {
+              "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-split-cross-white.jpg",
+              "alt": "CAD render in white: insert split crosswise into two short compartments"
+            }
+          }
         },
         {
-          "src": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ac2a892195f9172ed6b23f9.jpg",
-          "alt": "CAD render in black: four-compartment insert"
+          "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-four-black.jpg",
+          "alt": "CAD render in black: four-compartment insert",
+          "byColor": {
+            "White": {
+              "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@a84d3feaa31d0cc04845cc6881bfffb1200e0744/img/klein/klein-four-white.jpg",
+              "alt": "CAD render in white: four-compartment insert"
+            }
+          }
         },
         {
           "src": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6abe56ca1670d0abe812c61a.jpg",
@@ -2696,6 +2721,8 @@
   var TITLE_EL = document.querySelector('title[data-br-head]');
   // Browser tab icon (the ridge mark). GHL's own favicon setting wins if it is set; this fills in when it isn't.
   (function () {
+    // GHL's own favicon setting still points at the old Blackridge mark: remove every icon that isn't ours.
+    Array.prototype.forEach.call(document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]'), function (l) { if (!l.hasAttribute('data-br-head')) l.parentNode.removeChild(l); });
     if (document.querySelector('link[rel~="icon"][data-br-icon]')) return;
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="4" y="4" width="92" height="92" rx="14" fill="#F6F6F3" stroke="#111" stroke-width="6"/><text x="50" y="66" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="46" fill="#111">HN</text></svg>';
     var l = document.createElement('link'); l.rel = 'icon'; l.type = 'image/svg+xml'; l.setAttribute('data-br-icon', ''); l.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
@@ -2750,10 +2777,14 @@
   function fromPrice(p) { return p.variants && p.variants.length ? Math.min.apply(null, p.variants.map(function (v) { return v.price; })) : p.price; }
   function priceText(p) { var f = fromPrice(p); if (f === null || f === undefined || f === '') return 'Quoted to order'; return (p.variants && p.variants.length ? 'From $' : '$') + f; }
   function visible(list) { return (list || []).filter(function (im) { return show(im.src); }); }
+  function hasColorSwap(p, ci) { var c = p.colors[ci || 0]; return !!(c && (p.photos || []).some(function (im) { return im.byColor && im.byColor[c.name]; })); }
   function imgsOf(p, ci) {
-    var photos = visible(p.photos), c = p.colors[ci || 0] || p.colors[0];
+    var c = p.colors[ci || 0] || p.colors[0], cn = c ? c.name : '';
+    // A photo can carry byColor: { White: {src, alt} } so picking that color swaps the render in place.
+    var photos = visible((p.photos || []).map(function (im) { return (im.byColor && im.byColor[cn]) || im; }));
     var own = c ? visible(c.images) : [];
     if (p.colorImagesReady) {
+      if (hasColorSwap(p, ci) || (!(ci || 0) && (p.photos || []).some(function (im) { return im.byColor; }))) return photos; // default color: its renders are already the photos
       var render = own[0] || (p.colors[0] && visible(p.colors[0].images)[0]);
       return photos.concat(render ? [render] : []);
     }
@@ -3119,7 +3150,7 @@
     var t;
     if (document.body.classList.contains('editing') && e.target.closest('[contenteditable="true"]')) return;
     if ((t = e.target.closest('[data-sw]'))) { pdp.color = +t.dataset.sw; pdp.img = 0; pdpInner(); return; }
-    if ((t = e.target.closest('[data-matcolor]'))) { pdp.matColor = +t.dataset.matcolor; if (bySlug(pdp.slug).colorImagesReady) { pdp.color = pdp.matColor; pdp.img = photoCount(bySlug(pdp.slug)); } pdpInner(); return; }
+    if ((t = e.target.closest('[data-matcolor]'))) { pdp.matColor = +t.dataset.matcolor; if (bySlug(pdp.slug).colorImagesReady) { pdp.color = pdp.matColor; pdp.img = hasColorSwap(bySlug(pdp.slug), pdp.color) ? 0 : photoCount(bySlug(pdp.slug)); } pdpInner(); return; }
     if ((t = e.target.closest('[data-thumb]'))) { pdp.img = +t.dataset.thumb; pdpInner(); return; }
     if ((t = e.target.closest('a.buy[data-order]'))) { startOrder(t); return; }
     if ((t = e.target.closest('[data-mix]'))) {
