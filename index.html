@@ -567,7 +567,10 @@
       "Black",
       "White"
     ],
-    "specialColorLead": "adds up to 7 business days"
+    "specialColorLead": "adds up to 7 business days",
+    "qr": {
+      "k": "klein-modbox-bin-insert"
+    }
   },
   "categories": [
     {
@@ -3304,6 +3307,9 @@
   function route() {
     var h = location.hash.replace(/^#/, '') || '/';
     if (h === 'edit') h = '/';
+    // Short QR links printed on parts: #/q/<code> -> product page (codes live in config.qr)
+    var qm = h.match(/^\/q\/([a-z0-9-]+)/i), qmap = (DATA.config && DATA.config.qr) || {};
+    if (qm && qmap[qm[1].toLowerCase()]) { location.replace('#/p/' + qmap[qm[1].toLowerCase()] + '?src=qr'); return; }
     var parts = h.split('?')[0].split('/').filter(Boolean), r = parts[0] || '';
     document.body.classList.remove('filters-open'); $('msheet').classList.remove('open');
     var jump = null, title = 'Hufnor Design | 3D printed parts from Lenexa, Kansas', nav = r;
