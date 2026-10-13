@@ -543,7 +543,7 @@
 <script type="application/json" id="br-data" data-br="">
 {
   "config": {
-    "announcement": "Made to order in Lenexa, KS  ·  Free 1-year replacement on parts under $100",
+    "announcement": "Made to order in Overland Park, KS  ·  Free 1-year replacement on parts under $100",
     "inbox": "blackridgedesign.kc@gmail.com",
     "web3formsKey": "8940b521-94bf-461b-a660-06aa167a48a9",
     "orderStatusUrl": "",
@@ -849,12 +849,16 @@
           "3.26 × 4.10 × 1.81 in (82.7 × 104.1 × 46 mm)"
         ],
         [
+          "Inside",
+          "Open 3.91 × 3.07 in, 1.75 in deep. Divided layouts: see the compartment chart in the photos."
+        ],
+        [
           "Layouts",
           "Open, split lengthwise, split crosswise, 4-compartment"
         ],
         [
           "Material",
-          "PETG, printed to order in Lenexa"
+          "PETG, printed to order in Overland Park"
         ],
         [
           "Sold as",
@@ -1092,6 +1096,10 @@
           }
         },
         {
+          "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@9005a54736551de17486e931c885aaf37c8bb56e/img/dims/klein-compartments.png",
+          "alt": "Inside sizes for every layout: open 3.91 × 3.07 in; split lengthwise two 3.91 × 1.49 in; split crosswise two 1.91 × 3.07 in; 4-compartment four 1.91 × 1.49 in; all 1.75 in deep"
+        },
+        {
           "src": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6abe56ca1670d0abe812c61a.jpg",
           "alt": "Real photograph of a black open insert inside an orange Klein MODbox bin. (earlier prototype)."
         },
@@ -1178,7 +1186,11 @@
       },
       "fits": [
         "Klein MODbox"
-      ]
+      ],
+      "specImage": {
+        "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@9005a54736551de17486e931c885aaf37c8bb56e/img/dims/klein-dimensions.png",
+        "alt": "Top view with dimensions: 4.10 by 3.26 inches outside, 3.91 by 3.07 inches inside, 1.75 inches deep, 1.81 inches tall"
+      }
     },
     {
       "slug": "jbl-speaker-versatrack-mount",
@@ -1674,7 +1686,7 @@
         "Honda Civic 2016–2021"
       ],
       "specImage": {
-        "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@531bb18e716a2db06ad13d10baec6713b9bd8697/img/civic-trash/civic-trash-can-dimensions.png",
+        "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@9005a54736551de17486e931c885aaf37c8bb56e/img/dims/civic-trash-can-dimensions.png",
         "alt": "Top view with dimensions: 7.50 by 5.38 inches overall, 5.50 by 2.47 inch opening, 0.88 inches tall with the lid in"
       }
     },
@@ -2410,6 +2422,10 @@
           "17 mm, fits common ball-mount phone heads"
         ],
         [
+          "Size",
+          "1.25″ W × 2.82″ H × 1.41″ deep from the board"
+        ],
+        [
           "Fits",
           "IKEA Skadis, every board size. Two-peg footprint."
         ],
@@ -2448,7 +2464,11 @@
         "IKEA Skadis",
         "17 mm ball heads"
       ],
-      "freeShipping": true
+      "freeShipping": true,
+      "specImage": {
+        "src": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@9005a54736551de17486e931c885aaf37c8bb56e/img/dims/skadis-ball-mount-dimensions.png",
+        "alt": "Front and side views with dimensions: plate 1.25 by 2.82 inches, 1.41 inches deep from the board, 17 mm ball"
+      }
     },
     {
       "slug": "custom-desk-drawer",
@@ -2708,7 +2728,7 @@
     </svg>
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow mono">Designed &amp; printed in Lenexa, Kansas</p>
+        <p class="eyebrow mono">Designed &amp; printed in Overland Park, Kansas</p>
         <h1>Useful parts, made to fit.</h1>
         <p class="lede">Shop 3D-printed parts or get a custom design for your setup.</p>
         <div class="hero-cta"><a class="btn btn-oxide" href="#/shop">Browse the catalog</a><a class="btn btn-ghost" href="#/custom">Get a custom part</a></div>
@@ -2718,13 +2738,13 @@
   </header>
 
   <section class="sec"><div class="wrap">
-    <div class="sec-head"><div><span class="mono">Shop</span><h2>Shop by category. If you don't see it, we'll make it.</h2><p>Every part started with a problem that didn't have a solution we liked, so we printed a better one.</p></div><a class="text-link" href="#/shop">See all parts</a></div>
-    <div class="cats" id="homeCats" data-render=""></div>
+    <div class="sec-head"><div><span class="mono">In the shop now</span><h2>Drawn, printed and test-fitted before it’s listed.</h2></div><a class="text-link" href="#/shop">Shop all</a></div>
+    <div class="pgrid" id="homeFeatured" data-render=""></div>
   </div></section>
 
   <section class="sec"><div class="wrap">
-    <div class="sec-head"><div><span class="mono">In the shop now</span><h2>Drawn, printed and test-fitted before it’s listed.</h2></div><a class="text-link" href="#/shop">Shop all</a></div>
-    <div class="pgrid" id="homeFeatured" data-render=""></div>
+    <div class="sec-head"><div><span class="mono">Shop</span><h2>Shop by category. If you don't see it, we'll make it.</h2><p>Every part started with a problem that didn't have a solution we liked, so we printed a better one.</p></div><a class="text-link" href="#/shop">See all parts</a></div>
+    <div class="cats" id="homeCats" data-render=""></div>
   </div></section>
 
   <section class="sec" id="why"><div class="wrap split">
@@ -2745,7 +2765,7 @@
     <div class="sec-head"><div><span class="mono">Before you order</span><h2>Questions people ask us.</h2><p>Short answers. Every one of them is also on the product page it applies to.</p></div></div>
     <div class="faq" data-faq>
       <details><summary>Why PETG instead of PLA?</summary><p>PLA softens around 140 °F and a parked car beats that easily. Catalog parts are printed in PETG unless the product page says otherwise, so they hold their shape in a hot cabin, a garage in July or a sunny windowsill.</p></details>
-      <details><summary>How long until it ships?</summary><p>Each part is printed for your order in Lenexa, Kansas. Parts in black or white ship within 5 business days; other colors add up to 7 business days while we order the filament. Custom parts ship once you approve the final design. We email tracking when it ships. US addresses only, $5.99 flat per order, shown at checkout.</p></details>
+      <details><summary>How long until it ships?</summary><p>Each part is printed for your order in Overland Park, Kansas. Parts in black or white ship within 5 business days; other colors add up to 7 business days while we order the filament. Custom parts ship once you approve the final design. We email tracking when it ships. US addresses only, $5.99 flat per order, shown at checkout.</p></details>
       <details><summary>Will it fit my car, board or box?</summary><p>Fitment is listed on every product page: the Civic parts fit 2016–2021 sedan, coupe, hatchback, Si and Type R (not the 2022+ 11th generation); the Skadis mounts fit every IKEA Skadis board size; the Klein inserts fit the 54500MBX half-width component box. Not sure? Send a photo and a rough size through the <a href="#/custom">contact form</a> and we’ll tell you before you buy.</p></details>
       <details><summary>What if it doesn’t fit or doesn’t work for me?</summary><p>Tell us within 30 days of delivery. Send it back unused and we refund the part price (shipping isn’t refunded), or we revise the design until it fits. Custom and commissioned parts aren’t returnable, but we keep revising until they’re right. Details on the <a href="#/shipping">shipping &amp; returns</a> page.</p></details>
       <details><summary>What does the warranty cover?</summary><p>One year from the day it ships. Parts under $100 are replaced free (you cover postage); parts over $100 are replaced at the cost of material plus shipping. We ask for a photo of the break or the part itself. Full terms are in the <a href="#/warranty">warranty</a> section.</p></details>
@@ -2797,7 +2817,7 @@
     <ol class="steps">
       <li><h3>Send a photo and a rough size</h3><p>What it holds, what it has to clear, rough measurements. A phone photo and a tape measure are usually enough.</p></li>
       <li><h3>Get a quote inside a week</h3><p>No minimum and no design fee on printed parts. Most land between $10 and $500.</p></li>
-      <li><h3>We print it until it fits</h3><p>Revised until it’s right, shipped from Lenexa, and covered by the same one-year replacement.</p></li>
+      <li><h3>We print it until it fits</h3><p>Revised until it’s right, shipped from Overland Park, and covered by the same one-year replacement.</p></li>
     </ol>
     <details class="more" id="commission">
       <summary><b>Bigger builds: equipment and machines</b><span>Starts with a free call</span></summary>
@@ -2843,7 +2863,7 @@
         <div class="field full"><label for="f-details">What does it need to do?</label><textarea id="f-details" name="Details" placeholder="What it holds, what it has to clear, rough measurements. You can send photos when we reply."></textarea></div>
         <input class="hp" type="checkbox" id="f-bot" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="form-foot"><button class="btn btn-oxide" type="submit">Send it</button><span class="form-msg" id="formMsg" role="status"></span></div>
-        <p class="floor">Catalog parts are made to order and ship from Lenexa. Custom parts get a quote inside a week, with no discovery fee and no minimum.<br>Hufnor Design (Hufnor LLC) designs and manufactures custom equipment. We do not offer engineering services to the public.</p>
+        <p class="floor">Catalog parts are made to order and ship from Overland Park. Custom parts get a quote inside a week, with no discovery fee and no minimum.<br>Hufnor Design (Hufnor LLC) designs and manufactures custom equipment. We do not offer engineering services to the public.</p>
       </form>
     </div>
   </section>
@@ -2878,7 +2898,7 @@
     <ol class="steps" id="binsHow">
       <li><h3>You take three photos</h3><p>The tool lying flat on plain Letter or A4 paper, the same tool on its side, and its brand and model label. No calipers, no printer, no mailing anything.</p></li>
       <li><h3>We trace and check it</h3><p>Software finds the paper's corners, flattens the photo to true scale and cuts out the tool's outline. The side photo sets the pocket depth. A person checks every outline before it goes further.</p></li>
-      <li><h3>Quote, then print</h3><p>We email a preview and a price within two business days. Once you approve, we cut the pocket with clearance and a finger notch, print it and ship it from Lenexa.</p></li>
+      <li><h3>Quote, then print</h3><p>We email a preview and a price within two business days. Once you approve, we cut the pocket with clearance and a finger notch, print it and ship it from Overland Park.</p></li>
     </ol>
 
     <h2 class="h2" style="margin:0 0 18px">The three photos</h2>
@@ -2913,7 +2933,7 @@
 <div data-page="shipping"><div class="wrap policy" style="padding-top:clamp(48px,7vw,90px);padding-bottom:clamp(48px,7vw,90px)">
   <span class="mono" style="color:var(--oxide)">Policies</span>
   <h1 class="h2" style="margin-top:10px">Shipping &amp; returns</h1>
-  <p class="lede" style="margin-top:14px;max-width:52ch">Every part is printed for your order in Lenexa, Kansas. Here’s what happens after you check out.</p>
+  <p class="lede" style="margin-top:14px;max-width:52ch">Every part is printed for your order in Overland Park, Kansas. Here’s what happens after you check out.</p>
   <div class="terms" style="margin-top:28px">
     <div class="term"><h3>Shipping</h3><p>US addresses only. $5.99 flat per order, shown at checkout. Parts in black or white ship within 5 business days; other colors add up to 7 business days while we order the filament. Custom parts ship once you approve the final design. We email tracking when it ships.</p></div>
     <div class="term"><h3>Sales tax</h3><p>Prices on the site don’t include tax. Sales tax is added at checkout wherever we’re required to collect it.</p></div>
@@ -2942,7 +2962,7 @@
     <div class="ftr-grid">
       <div>
         <span class="brand" id="ftrBrand"><img data-img="config.logoWide" class="brand-logo brand-logo-ftr" alt="Hufnor Design" width="800" height="209"></span>
-        <p style="margin:14px 0 0;max-width:30ch">Designed and printed to order in Lenexa, Kansas.</p>
+        <p style="margin:14px 0 0;max-width:30ch">Designed and printed to order in Overland Park, Kansas.</p>
       </div>
       <div><h4>Shop</h4><ul id="ftrCats" data-render=""></ul></div>
       <div><h4>Company</h4><ul><li><a href="#/custom">Custom parts</a></li><li><a href="#/bins">Bins from photos</a></li><li><a href="#/custom/commission">Commissions</a></li><li><a href="#/about">About us</a></li><li><a href="#/warranty">Warranty</a></li><li><a href="#/faq">FAQ</a></li><li><a href="#/order">Order status</a></li><li><a href="#/shipping">Shipping &amp; returns</a></li><li><a href="/privacy">Privacy</a></li></ul></div>
@@ -2993,7 +3013,7 @@
   try{
     var D=JSON.parse(document.getElementById('br-data').textContent);
     var base='https://hufnor.com/';
-    var org={"@type":"Organization","@id":base+"#org","name":"Hufnor Design","url":base,"logo":(D.config&&D.config.logo&&D.config.logo.src)||undefined,"email":D.config&&D.config.inbox,"address":{"@type":"PostalAddress","addressLocality":"Lenexa","addressRegion":"KS","addressCountry":"US"}};
+    var org={"@type":"Organization","@id":base+"#org","name":"Hufnor Design","url":base,"logo":(D.config&&D.config.logo&&D.config.logo.src)||undefined,"email":D.config&&D.config.inbox,"address":{"@type":"PostalAddress","addressLocality":"Overland Park","addressRegion":"KS","addressCountry":"US"}};
     function img(p){var c=(p.colors||[])[0];var i=c&&c.images&&c.images[0];return i&&i.src;}
     var items=(D.products||[]).filter(function(p){return p.price;}).map(function(p,i){
       var offers=(p.variants&&p.variants.length)?p.variants.filter(function(v){return v.link;}).map(function(v){return {"@type":"Offer","name":(p.variantLabel?p.variantLabel+': ':'')+v.label,"price":String(v.price),"priceCurrency":"USD","availability":"https://schema.org/InStock","url":base+'#/p/'+p.slug};})
@@ -3273,7 +3293,7 @@
   function viewShop(cid) {
     var c = cat(cid); if (!c) cid = 'all'; shopCat = cid;
     $('shopView').innerHTML =
-      '<div class="page-top"><span class="mono" style="color:var(--oxide)">Shop</span><h1 style="margin-top:8px">' + (c ? esc(c.name) : 'All parts') + '</h1><p>' + (c && c.intro ? esc(c.intro) : (c ? esc(c.blurb) + '. ' : '') + 'Printed to order and shipped from Lenexa.') + '</p>' +
+      '<div class="page-top"><span class="mono" style="color:var(--oxide)">Shop</span><h1 style="margin-top:8px">' + (c ? esc(c.name) : 'All parts') + '</h1><p>' + (c && c.intro ? esc(c.intro) : (c ? esc(c.blurb) + '. ' : '') + 'Printed to order and shipped from Overland Park.') + '</p>' +
       (c && c.points && c.points.length ? '<ul class="plist" style="max-width:74ch">' + c.points.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
       '<nav class="tabs" aria-label="Categories"><a class="tab" href="#/shop"' + (cid === 'all' ? ' aria-current="page"' : '') + '>All</a>' +
       DATA.categories.map(function (k) { return '<a class="tab" href="#/shop/' + k.id + '"' + (cid === k.id ? ' aria-current="page"' : '') + '>' + esc(k.name) + '</a>'; }).join('') + '</nav></div>' +
@@ -3361,7 +3381,7 @@
       '<div class="price-row">' + (price == null ? '<div class="big-price quote">Quoted to order</div>' : '<div class="big-price">$' + price + '</div>') + (note ? '<p class="price-note">' + esc(note) + '</p>' : '') + (price == null ? '' : '<p class="price-fine">' + (p.freeShipping ? 'Plus tax. Free US shipping.' : 'Plus tax and $5.99 US shipping per order.') + ' <a href="#/shipping">Shipping &amp; returns</a></p>') + '</div>' +
       (price == null ? '<a class="btn btn-oxide buy" href="#/custom">Request a quote</a><p class="pdp-small">Quotes go out inside a week. No minimum and no design fee.</p>'
         : (live && mixOk ? '<a class="btn btn-oxide buy" href="' + esc(checkoutLink) + '" target="_blank" rel="noopener" data-order="' + esc(JSON.stringify({ slug: p.slug, name: p.name, color: tone.name, option: v ? (p.variantLabel || 'Quantity') + ': ' + v.label : '', layouts: mix ? mixText(p, mix) : '', price: price, code: mix ? mixCode(p, mix) : '' })) + '">Buy now</a>' : live ? '<button class="btn btn-oxide buy" type="button" disabled>Buy now</button>' : '<button class="btn btn-oxide buy" type="button" data-act="nolink">Buy now</button>') +
-          '<p class="pdp-small">Printed to order in Lenexa. Breaks within a year? We replace it free.<br>Need it a different size? <a href="#/custom">Get it drawn</a>.</p>') +
+          '<p class="pdp-small">Printed to order in Overland Park. Breaks within a year? We replace it free.<br>Need it a different size? <a href="#/custom">Get it drawn</a>.</p>') +
       (p.loadBearing ? '<p class="warn">This part carries load. If it ever cracks, stop using it and send us a photo of the break.</p>' : '') +
       '<div class="remix-cta"><button class="btn btn-ghost remix-btn" type="button" data-remix="' + esc(JSON.stringify({ slug: p.slug, name: p.name, img: im ? im.src : '', alt: im ? im.alt : '', color: tone.name, option: v ? (p.variantLabel || 'Quantity') + ': ' + v.label : '', layouts: mix ? mixText(p, mix) : '', price: price })) + '">Remix this part</button><p class="pdp-small">Need it different? Mark up this picture and tell us what to change. We redraw it and quote inside a week — a variation costs the part plus the hours to change it.</p></div>' +
       '</div>';
@@ -3432,7 +3452,7 @@
     if (qm && qmap[qm[1].toLowerCase()]) { location.replace('#/p/' + qmap[qm[1].toLowerCase()] + '?src=qr'); return; }
     var parts = h.split('?')[0].split('/').filter(Boolean), r = parts[0] || '';
     document.body.classList.remove('filters-open'); $('msheet').classList.remove('open');
-    var jump = null, title = 'Hufnor Design | 3D printed parts from Lenexa, Kansas', nav = r;
+    var jump = null, title = 'Hufnor Design | 3D printed parts from Overland Park, Kansas', nav = r;
     if (r === '' || r === 'about' || r === 'warranty' || r === 'why' || r === 'faq') { page('home'); mountVideo(); if (r) jump = r; }
     else if (r === 'shop') { page('shop'); viewShop(parts[1] || 'all'); title = (cat(parts[1]) ? cat(parts[1]).name : 'Shop') + ' | Hufnor Design'; }
     else if (r === 'p') { if (viewProduct(parts[1])) { page('product'); title = bySlug(parts[1]).name + ' | Hufnor Design'; } else page('notfound'); nav = 'shop'; }
