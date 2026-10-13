@@ -1863,6 +1863,10 @@
           "2016–2021 Civic console. Slides in over the trash can, and the lid still closes."
         ],
         [
+          "Versions",
+          "Standard, or Wireless charging: a recess for an Apple Watch charger puck under the AirPods pocket, with a cable channel out the front. For AirPods cases that charge on an Apple Watch charger. Charger not included."
+        ],
+        [
           "Holds",
           "AirPods case, Apple wallet, Honda key fob"
         ],
@@ -1885,8 +1889,8 @@
       ],
       "todo": [
         "Upload the two organizer photos to GHL (they are waiting in the upload queue)",
-        "Wireless charging version: Michael to set the price; Stripe product prod_VQngPptIPMlElY + link plink_1UPw5YQKM57A5tQ4P1oSytGG already exist at $14.99 but are NOT on the site yet",
-        "Renders of both versions (Standard / Wireless) in all colors"
+        "Renders of both versions (Standard / Wireless) in all colors",
+        "Confirm AirPods charge through the 0.94 mm floor"
       ],
       "link": "https://buy.stripe.com/14AdRb83kaxgerF6RN93y0u",
       "photos": [
@@ -1901,6 +1905,22 @@
       ],
       "fits": [
         "Honda Civic 2016–2021"
+      ],
+      "variantLabel": "Version",
+      "variants": [
+        {
+          "label": "Standard",
+          "count": 1,
+          "price": 14.99,
+          "link": "https://buy.stripe.com/14AdRb83kaxgerF6RN93y0u"
+        },
+        {
+          "label": "Wireless charging",
+          "count": 1,
+          "price": 14.99,
+          "link": "https://buy.stripe.com/14AeVf1EW48S3N13FB93y0A",
+          "note": "Bring your own Apple Watch charger"
+        }
       ]
     },
     {
@@ -3124,7 +3144,7 @@
   function productInCat(p, id) { return productCats(p).indexOf(id) >= 0; }
   function productCatNames(p) { return productCats(p).map(function (id) { var c = cat(id); return c ? c.name : id; }).filter(Boolean); }
   function fromPrice(p) { return p.variants && p.variants.length ? Math.min.apply(null, p.variants.map(function (v) { return v.price; })) : p.price; }
-  function priceText(p) { var f = fromPrice(p); if (f === null || f === undefined || f === '') return 'Quoted to order'; return (p.variants && p.variants.length ? 'From $' : '$') + f; }
+  function priceText(p) { var f = fromPrice(p); if (f === null || f === undefined || f === '') return 'Quoted to order'; var same = p.variants && p.variants.every(function (v) { return v.price === f; }); return (p.variants && p.variants.length && !same ? 'From $' : '$') + f; }
   function visible(list) { return (list || []).filter(function (im) { return show(im.src); }); }
   function hasColorSwap(p, ci) { var c = p.colors[ci || 0]; return !!(c && (p.photos || []).some(function (im) { return im.byColor && im.byColor[c.name]; })); }
   function imgsOf(p, ci) {
