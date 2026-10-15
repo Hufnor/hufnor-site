@@ -3384,9 +3384,11 @@
       ps.forEach(function (p) { var im = imgsOf(p); if (im[0]) tiles.push({ src: im[0].src, name: p.name }); });
       if (tiles.length === 1 && ps[0]) {
         // One product: show it in every CAD color we have a render for; otherwise its other photos.
-        var withColors = (ps[0].photos || []).filter(function (im) { return im.byColor; })[0];
-        if (withColors) tiles = [{ src: withColors.src }].concat(Object.keys(withColors.byColor).map(function (k) { return { src: withColors.byColor[k].src }; })).slice(0, 9);
+        var withColors = (ps[0].photos || []).filter(function (im) { return im.byColor; })[0], perColor = (ps[0].colors || []).map(function (k) { return visible(k.images)[0]; }).filter(Boolean);
+        if (withColors) tiles = [{ src: withColors.src }].concat(Object.keys(withColors.byColor).map(function (k) { return { src: withColors.byColor[k].src }; }));
+        else if (perColor.length > 1) tiles = perColor.map(function (im) { return { src: im.src }; });
         else imgsOf(ps[0]).slice(1, 4).forEach(function (im) { tiles.push({ src: im.src }); });
+        tiles = tiles.slice(0, 9);
       }
       tiles = tiles.slice(0, 9);
       var cols = tiles.length <= 2 ? tiles.length : tiles.length <= 4 ? 2 : 3;
