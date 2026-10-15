@@ -3382,8 +3382,13 @@
       var n = DATA.products.filter(function (p) { return productInCat(p, c.id); }).length;
       var ps = DATA.products.filter(function (p) { return productInCat(p, c.id); }), tiles = [];
       ps.forEach(function (p) { var im = imgsOf(p); if (im[0]) tiles.push({ src: im[0].src, name: p.name }); });
-      if (tiles.length === 1 && ps[0]) imgsOf(ps[0]).slice(1, 4).forEach(function (im) { tiles.push({ src: im.src, name: ps[0].name }); });
-      tiles = tiles.slice(0, 6);
+      if (tiles.length === 1 && ps[0]) {
+        // One product: show it in every CAD color we have a render for; otherwise its other photos.
+        var withColors = (ps[0].photos || []).filter(function (im) { return im.byColor; })[0];
+        if (withColors) tiles = [{ src: withColors.src }].concat(Object.keys(withColors.byColor).map(function (k) { return { src: withColors.byColor[k].src }; })).slice(0, 9);
+        else imgsOf(ps[0]).slice(1, 4).forEach(function (im) { tiles.push({ src: im.src }); });
+      }
+      tiles = tiles.slice(0, 9);
       var cols = tiles.length <= 2 ? tiles.length : tiles.length <= 4 ? 2 : 3;
       var grid = tiles.length > 1 ? '<span class="cat-grid" style="--cols:' + cols + '" aria-hidden="true">' + tiles.map(function (t, i) { return '<span style="--i:' + i + '">' + imgTag(t.src, '') + '</span>'; }).join('') + '</span>' : '';
       return '<a class="cat' + (grid ? ' has-grid' : '') + '" href="#/shop/' + c.id + '">' + (c.image ? imgTag(c.image, c.name) : '<span class="grid-ph"></span>') + grid +
