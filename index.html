@@ -146,6 +146,9 @@
   .cat{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:2px;background:#2A363F;text-decoration:none;color:#fff;isolation:isolate}
   .cat img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
   .cat:hover img{transform:scale(1.04)}
+  .cat img.cat-alt{position:absolute;inset:0;opacity:0;transition:opacity .45s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+  .cat.has-hover:hover img.cat-alt,.cat.has-hover:focus-visible img.cat-alt{opacity:1}
+  @media (hover:none){.cat img.cat-alt{display:none}}
   .cat::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(16,26,36,.85) 0%,rgba(16,26,36,0) 60%)}
   .cat .grid-ph{position:absolute;inset:0;background:linear-gradient(#3a4955 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,#3a4955 1px,transparent 1px) 0 0/28px 28px,#22303A}
   .cat-label{position:absolute;left:16px;right:16px;bottom:14px;z-index:1}
@@ -155,10 +158,14 @@
   .cat-custom{background:radial-gradient(120% 90% at 70% 20%,#2C4253 0%,#1A2731 70%);}
   .cat-custom::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(140,180,205,.13) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(140,180,205,.13) 1px,transparent 1px) 0 0/24px 24px;z-index:0}
   .cat-custom .bp{position:absolute;inset:0;width:100%;height:100%;z-index:0}
-  .cat-custom .bp-part path,.cat-custom .bp-part circle,.cat-custom .bp-part rect{fill:none;stroke:#9CC8E2;stroke-width:2.2;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:0;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+  .cat-custom .bp-part path,.cat-custom .bp-part circle,.cat-custom .bp-part rect{fill:none;stroke:#9CC8E2;stroke-width:2.2;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)}
+  .cat-custom .bp-dim,.cat-custom .bp text{opacity:0;transition:opacity .4s ease .9s}
+  .cat-custom:hover .bp-part path,.cat-custom:hover .bp-part circle,.cat-custom:hover .bp-part rect,.cat-custom:focus-visible .bp-part path,.cat-custom:focus-visible .bp-part circle,.cat-custom:focus-visible .bp-part rect{stroke-dashoffset:0}
+  .cat-custom:hover .bp-dim,.cat-custom:hover .bp text,.cat-custom:focus-visible .bp-dim,.cat-custom:focus-visible .bp text{opacity:1}
+  @media (hover:none),(prefers-reduced-motion:reduce){.cat-custom .bp-part path,.cat-custom .bp-part circle,.cat-custom .bp-part rect{stroke-dashoffset:0;transition:none}.cat-custom .bp-dim,.cat-custom .bp text{opacity:1;transition:none}}
   .cat-custom .bp-dim path{fill:none;stroke:var(--oxide-hi);stroke-width:1.6}
   .cat-custom .bp text{fill:var(--oxide-hi);font:600 12px var(--f-mono,monospace);letter-spacing:.16em}
-  .cat-custom:hover .bp-part path,.cat-custom:hover .bp-part circle,.cat-custom:hover .bp-part rect{animation:bpdraw 1.6s cubic-bezier(.2,.8,.2,1)}
+  
   @keyframes bpdraw{from{stroke-dashoffset:900}to{stroke-dashoffset:0}}
   .cat-custom .cat-cta{display:inline-block;margin-top:4px;color:#fff;font-weight:700;opacity:1;border-bottom:1px solid var(--oxide-hi)}
   @media (prefers-reduced-motion:reduce){.cat-custom:hover .bp-part path,.cat-custom:hover .bp-part circle{animation:none}}
@@ -600,7 +607,8 @@
         "Measured, not guessed: drawn against the actual car and test-fitted before it’s listed.",
         "Printed for a hot car: materials picked to survive a Kansas July.",
         "Fits 2016–2021 Sedan (FC1), 2016–2020 Coupe (FC3), 2017–2021 Hatchback (FK7), Si and Type R (FK8). Not the 2022+ 11th gen."
-      ]
+      ],
+      "hoverImage": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@8a6013e2827d25a8a6cdbf2742ec5a79e53a819e/img/photos/car-trash-top.jpg"
     },
     {
       "id": "pegboard-toolbox",
@@ -612,7 +620,8 @@
         "Skadis mounts snap in with T-clips on the standard slot pattern, so they fit every board size. Nothing to drill.",
         "Klein MODbox inserts are drawn to the bin; check the fitment on each product page.",
         "Send us the tool: a photo and a rough size is usually enough to draw a mount for something we’ve never held."
-      ]
+      ],
+      "hoverImage": "https://cdn.jsdelivr.net/gh/Hufnor/hufnor-site@c57c1e86cafd3cab837fb6ef429456c1a50ee47a/img/photos/klein-case.jpg"
     },
     {
       "id": "desk",
@@ -625,7 +634,8 @@
         "Bins lift out and rearrange when your kit changes.",
         "Two trays side by side: run one, or both across the width of a desk.",
         "Send us the drawer: inside dimensions and what goes in it, and we’ll lay out the bins."
-      ]
+      ],
+      "hoverImage": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6abc7e3b6c64b8e488a25ffa.png"
     },
     {
       "id": "outdoors",
@@ -636,7 +646,8 @@
       "points": [
         "Check each product’s listed fitment before ordering. Compatibility with other boats, rails or bars is not implied.",
         "Included hardware is listed on each product page."
-      ]
+      ],
+      "hoverImage": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6abdbe1e11d7faddd413b689.jpg"
     },
     {
       "id": "home-gym",
@@ -647,7 +658,8 @@
       "points": [
         "Mounts use the IKEA Skadis footprint, so they move with your board.",
         "A rated hold weight is listed only after a logged hang test."
-      ]
+      ],
+      "hoverImage": "https://assets.cdn.filesafe.space/L75RVPA2dhng1Teg6UeS/media/6ab87050b4d207ff9defd2bf.jpg"
     }
   ],
   "swatches": {
@@ -3370,7 +3382,8 @@
     $('ftrCats').innerHTML = DATA.categories.map(function (c) { return '<li><a href="#/shop/' + c.id + '">' + esc(c.name) + '</a></li>'; }).join('') + '<li><a href="#/shop">All parts</a></li>';
     $('homeCats').innerHTML = DATA.categories.map(function (c) {
       var n = DATA.products.filter(function (p) { return productInCat(p, c.id); }).length;
-      return '<a class="cat" href="#/shop/' + c.id + '">' + (c.image ? imgTag(c.image, c.name) : '<span class="grid-ph"></span>') +
+      var hov = c.hoverImage || (function () { var ps = DATA.products.filter(function (p) { return productInCat(p, c.id); }); for (var i = 0; i < ps.length; i++) { var im = imgsOf(ps[i]); for (var j = 0; j < im.length; j++) if (im[j].src !== c.image) return im[j].src; } return ''; })();
+      return '<a class="cat' + (hov ? ' has-hover' : '') + '" href="#/shop/' + c.id + '">' + (c.image ? imgTag(c.image, c.name) : '<span class="grid-ph"></span>') + (hov ? imgTag(hov, '', 'cat-alt') : '') +
         '<span class="cat-cover ed-only" data-qcover="' + esc(c.id) + '">Replace cover</span>' + (c.image ? '<span class="cat-cover ed-only" style="top:auto;bottom:10px" data-qfix="' + esc(c.image) + '" data-where="' + esc('Category cover · ' + c.name) + '">Flag for fix</span>' : '') + '<span class="cat-edit ed-only" data-qcat="' + esc(c.id) + '">Edit details</span>' +
         '<div class="cat-label">' + (n ? '' : '<span class="mono">Coming soon · custom now</span>') + '<h3>' + esc(c.name) + '</h3><p>' + (n ? n + (n === 1 ? ' product' : ' products') : esc(c.blurb)) + '</p></div></a>';
     }).join('') + '<a class="cat cat-custom" href="#/custom" aria-label="Custom parts: send a photo and a rough size, we draw it">' +
