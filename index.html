@@ -3391,7 +3391,7 @@
         tiles = tiles.slice(0, 9);
       }
       tiles = tiles.slice(0, 9);
-      var cols = tiles.length <= 2 ? tiles.length : tiles.length <= 4 ? 2 : 3;
+      var cols = tiles.length <= 3 ? tiles.length : tiles.length === 4 ? 2 : 3;
       var grid = tiles.length > 1 ? '<span class="cat-grid" style="--cols:' + cols + '" aria-hidden="true">' + tiles.map(function (t, i) { return '<span style="--i:' + i + '">' + imgTag(t.src, '') + '</span>'; }).join('') + '</span>' : '';
       return '<a class="cat' + (grid ? ' has-grid' : '') + '" href="#/shop/' + c.id + '">' + (c.image ? imgTag(c.image, c.name) : '<span class="grid-ph"></span>') + grid +
         '<span class="cat-cover ed-only" data-qcover="' + esc(c.id) + '">Replace cover</span>' + (c.image ? '<span class="cat-cover ed-only" style="top:auto;bottom:10px" data-qfix="' + esc(c.image) + '" data-where="' + esc('Category cover · ' + c.name) + '">Flag for fix</span>' : '') + '<span class="cat-edit ed-only" data-qcat="' + esc(c.id) + '">Edit details</span>' +
