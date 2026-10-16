@@ -163,7 +163,8 @@
   .cat-grid img{width:100%;height:100%;object-fit:contain;transform:none!important}
   .cat.has-grid:hover .cat-grid,.cat.has-grid:focus-visible .cat-grid{opacity:1}
   .cat.has-grid:hover .cat-grid>span,.cat.has-grid:focus-visible .cat-grid>span{opacity:1;transform:none}
-  @media (hover:none){.cat-grid{display:none}}
+  .cat.has-grid.show-grid .cat-grid{opacity:1}
+  .cat.has-grid.show-grid .cat-grid>span{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.cat-grid>span{transition:none;transform:none}}
   .cat::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(16,26,36,.85) 0%,rgba(16,26,36,0) 60%)}
   .cat .grid-ph{position:absolute;inset:0;background:linear-gradient(#3a4955 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,#3a4955 1px,transparent 1px) 0 0/28px 28px,#22303A}
@@ -178,7 +179,9 @@
   .cat-custom .bp-dim,.cat-custom .bp text{opacity:0;transition:opacity .6s ease 2.4s}
   .cat-custom:hover .bp-part path,.cat-custom:hover .bp-part circle,.cat-custom:hover .bp-part rect,.cat-custom:focus-visible .bp-part path,.cat-custom:focus-visible .bp-part circle,.cat-custom:focus-visible .bp-part rect{stroke-dashoffset:0}
   .cat-custom:hover .bp-dim,.cat-custom:hover .bp text,.cat-custom:focus-visible .bp-dim,.cat-custom:focus-visible .bp text{opacity:1}
-  @media (hover:none),(prefers-reduced-motion:reduce){.cat-custom .bp-part path,.cat-custom .bp-part circle,.cat-custom .bp-part rect{stroke-dashoffset:0;transition:none}.cat-custom .bp-dim,.cat-custom .bp text{opacity:1;transition:none}}
+  .cat-custom.show-bp .bp-part path,.cat-custom.show-bp .bp-part circle,.cat-custom.show-bp .bp-part rect{stroke-dashoffset:0}
+  .cat-custom.show-bp .bp-dim,.cat-custom.show-bp .bp text{opacity:1}
+  @media (prefers-reduced-motion:reduce){.cat-custom .bp-part path,.cat-custom .bp-part circle,.cat-custom .bp-part rect{stroke-dashoffset:0;transition:none}.cat-custom .bp-dim,.cat-custom .bp text{opacity:1;transition:none}}
   .cat-custom .bp-dim path{fill:none;stroke:var(--oxide-hi);stroke-width:1.6}
   .cat-custom .bp text{fill:var(--oxide-hi);font:600 12px var(--f-mono,monospace);letter-spacing:.16em}
   
@@ -3387,6 +3390,26 @@
       '</div></a>';
   }
 
+
+  // Touch screens can't hover: while a category tile is on screen, alternate cover -> product grid; the custom tile draws its blueprint.
+  var catIO = null;
+  function catPreview() {
+    if (!window.IntersectionObserver || !window.matchMedia || !matchMedia('(hover: none)').matches) return;
+    if (catIO) catIO.disconnect();
+    var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    catIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var el = e.target;
+        clearInterval(el._cyc); clearTimeout(el._t0);
+        if (!e.isIntersecting) { el.classList.remove('show-grid', 'show-bp'); return; }
+        if (el.classList.contains('cat-custom')) { el._t0 = setTimeout(function () { el.classList.add('show-bp'); }, 300); return; }
+        if (!el.classList.contains('has-grid')) return;
+        if (still) { el.classList.add('show-grid'); return; }
+        el._t0 = setTimeout(function () { el.classList.add('show-grid'); el._cyc = setInterval(function () { el.classList.toggle('show-grid'); }, 3200); }, 900);
+      });
+    }, { threshold: 0.6 });
+    Array.prototype.forEach.call(document.querySelectorAll('#homeCats .cat'), function (el) { catIO.observe(el); });
+  }
   function renderChrome() {
     $('announce').textContent = DATA.config.announcement || '';
     $('announce').hidden = !DATA.config.announcement;
@@ -3417,6 +3440,7 @@
       '</svg>' +
       '<div class="cat-label"><span class="mono">Custom · quoted in a week</span><h3>Don’t see it? We’ll draw it.</h3><p>Send a photo and a rough size. <span class="cat-cta">Start a custom part →</span></p></div></a>';
     $('homeFeatured').innerHTML = DATA.products.filter(function (p) { return p.featured; }).map(card).join('');
+    catPreview();
     Array.prototype.forEach.call(document.querySelectorAll('img[data-img^="config.logo"]'), function (el) { var L = DATA.config[el.getAttribute('data-img').slice(7)] || DATA.config.logo; if (L && L.src) { el.src = show(L.src); el.alt = L.alt || 'Hufnor Design'; el.onerror = function () { this.dataset.brImgBroken = 1; }; } });
     var tp = $('teamPhoto'); tp.src = show(DATA.config.teamPhoto.src); tp.alt = DATA.config.teamPhoto.alt || ''; tp.onerror = function () { this.dataset.brImgBroken = 1; };
     // inquiry dropdown follows the catalog
