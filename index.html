@@ -591,7 +591,7 @@
 {
   "config": {
     "announcement": "Made to order in Overland Park, KS  ·  Free 1-year replacement on parts under $100",
-    "inbox": "blackridgedesign.kc@gmail.com",
+    "inbox": "hufnordesign@gmail.com",
     "web3formsKey": "8940b521-94bf-461b-a660-06aa167a48a9",
     "orderStatusUrl": "",
     "binIntakeUrl": "https://script.google.com/macros/s/AKfycbzxjp0DWkmTzhvVuLgBYMh9Z7QKwrOVqIHbOA53V4w8sZE7FjOPMsmPZkRSsOsJBs4GAQ/exec",
@@ -3223,7 +3223,7 @@
     <div class="term"><h3>Changes and cancellations</h3><p>Email us within 24 hours of ordering to change a color or layout, or to cancel for a full refund. After that your part may already be on the printer.</p></div>
     <div class="term"><h3>Returns</h3><p>Doesn’t fit or doesn’t work for your setup? Tell us within 30 days of delivery. Send it back unused and we refund the part price (shipping isn’t refunded), or we revise the design until it fits. Custom and commissioned parts aren’t returnable, but we keep revising until they’re right.</p></div>
     <div class="term"><h3>Arrived broken or failed early</h3><p>That’s covered by our <a href="#/warranty">warranty</a>: send a photo and we replace it.</p></div>
-    <div class="term"><h3>Questions</h3><p>Email <a href="mailto:blackridgedesign.kc@gmail.com">blackridgedesign.kc@gmail.com</a> or use the <a href="#/custom">contact form</a>. We reply within two business days. How we handle your information: <a href="/privacy">privacy policy</a>.</p></div>
+    <div class="term"><h3>Questions</h3><p>Email <a href="mailto:hufnordesign@gmail.com">hufnordesign@gmail.com</a> or use the <a href="#/custom">contact form</a>. We reply within two business days. How we handle your information: <a href="/privacy">privacy policy</a>.</p></div>
   </div>
 </div></div>
 <div data-page="order"><div class="wrap policy" style="padding-top:clamp(48px,7vw,90px);padding-bottom:clamp(48px,7vw,90px)">
@@ -3759,8 +3759,8 @@
     var el = $('thanksView'); if (!el) return;
     el.innerHTML = '<span class="mono" style="color:var(--oxide)">Order received</span><h1 class="h2" style="margin-top:10px">Thanks. Your part goes on the printer next.</h1>' +
       (o ? '<div class="thanks-card"><p class="mono">Order ' + esc(o.id) + '</p><ul>' + orderLines(o).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
-        '<p class="lede" style="margin-top:18px;max-width:56ch">This is what we have on file for your order, and it’s what we’ll print. Stripe is emailing your receipt now. Something wrong? Email <a href="mailto:blackridgedesign.kc@gmail.com?subject=' + encodeURIComponent('Order ' + o.id) + '">blackridgedesign.kc@gmail.com</a> within 24 hours with your order code and we’ll fix it before printing.</p>'
-        : '<p class="lede" style="margin-top:18px;max-width:56ch">Stripe is emailing your receipt now. If you picked colors or layouts, reply to us at <a href="mailto:blackridgedesign.kc@gmail.com">blackridgedesign.kc@gmail.com</a> and we’ll confirm them before printing.</p>') +
+        '<p class="lede" style="margin-top:18px;max-width:56ch">This is what we have on file for your order, and it’s what we’ll print. Stripe is emailing your receipt now. Something wrong? Email <a href="mailto:hufnordesign@gmail.com?subject=' + encodeURIComponent('Order ' + o.id) + '">hufnordesign@gmail.com</a> within 24 hours with your order code and we’ll fix it before printing.</p>'
+        : '<p class="lede" style="margin-top:18px;max-width:56ch">Stripe is emailing your receipt now. If you picked colors or layouts, reply to us at <a href="mailto:hufnordesign@gmail.com">hufnordesign@gmail.com</a> and we’ll confirm them before printing.</p>') +
       '<p style="margin-top:22px"><a class="btn btn-ghost btn-sm" href="#/shop">Back to the shop</a></p>';
     if (o && !o.paidSent) {
       notify('PAID ' + o.id + ': ' + o.name, ['Order code: ' + o.id, 'Stripe Checkout session: ' + (sid || 'unknown')].concat(orderLines(o), ['', 'The buyer finished Stripe checkout and saw this summary on the thank-you page. Match the order code to the payment in Stripe (Client reference ID).']));
