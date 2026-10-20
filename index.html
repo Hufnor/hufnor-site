@@ -4413,14 +4413,15 @@
       if (x >= ibx[0] - padX && x <= ibx[2] + padX && y >= ibx[1] - padY && y <= ibx[3] + padY) continue;
       var x0 = x - R, x1 = x + R + 1, y0 = y - R, y1 = y + R + 1;
       var mean = (ii[y1 * (W + 1) + x1] - ii[y0 * (W + 1) + x1] - ii[y1 * (W + 1) + x0] + ii[y0 * (W + 1) + x0]) / ((2 * R + 1) * (2 * R + 1));
-      inkN++; if (lum[p] < mean - 14) inkPx++;
+      inkN++; if (lum[p] < mean - 10) inkPx++;
     }
     var speck = inkPx / Math.max(1, inkN);
     out.ink = speck;
     var touch = 0, ib = [W, H, -1, -1];
     item.list.forEach(function (p) { var x = p % W, y = (p - x) / W; if (!inside(qe, x + .5, y + .5)) touch++; if (x < ib[0]) ib[0] = x; if (y < ib[1]) ib[1] = y; if (x > ib[2]) ib[2] = x; if (y > ib[3]) ib[3] = y; });
     out.item = item.n ? { box: ib, frac: itemFrac, list: item.list } : null;
-    add('item', itemFrac >= T.itemMin, 'Tool on the paper', Math.round(itemFrac * 100) + '% of sheet', 'Put the tool in the middle of the sheet. Shiny or white tools need a colored sheet of paper.');
+    add('item', itemFrac >= T.itemMin && itemFrac <= 0.7, 'Tool on the paper', Math.round(itemFrac * 100) + '% of sheet',
+        itemFrac > 0.7 ? 'Can’t tell the tool from the paper. Use a plain sheet with no printing, and keep it flat.' : 'Put the tool in the middle of the sheet. Shiny or white tools need a colored sheet of paper.');
     add('clear', item.n > 0 && touch / Math.max(1, item.n) < 0.01, 'Tool clear of the paper edge', touch ? 'touching' : 'clear', 'Move the tool so a finger-width of paper shows all around it. Coil cables and straps on top or beside it on the paper.');
     add('plain', speck <= T.busy, 'Plain paper', (speck * 100).toFixed(2) + '% printed', 'Flip the sheet to a blank side or use clean printer paper. Printing confuses the outline.');
     var qm = quads.filter(function (a) { return a[1] > 20; }).map(function (a) { return a[0] / a[1]; });
@@ -4498,7 +4499,9 @@
   var stage = $('camStage'), video = $('camVideo'), ov = $('camOverlay'), shot = $('camShot'), list = $('camList');
   var lowRes = false, stream = null, track = null, raf = 0, tilt = null, steady = 0, lastT = 0, zoom = 1, zoomKnown = false, capLong = 0, canZoom = false, lastRes = null, busy = false;
   var proc = document.createElement('canvas'), pctx = proc.getContext('2d', { willReadFrequently: true });
-  var NEED = 5; // consecutive good frames (~0.7 s)
+  var NEED = 11; // consecutive good frames (~1.5 s at ~7 checks a second)
+  var MOVE = 0.012; // paper corners may drift at most 1.2 % of the frame between checks while holding
+  var lastQuad = null;
   var ORDER = ['paper', 'corners', 'level', 'distance', 'detail', 'item', 'clear', 'plain', 'light', 'sharp'];
   var LABELS = { paper: 'Paper in view', corners: 'All 4 corners showing', level: 'Pointing straight down', distance: 'Phone at a good height', detail: 'Enough detail', item: 'Tool on the paper', clear: 'Tool clear of the paper edge', plain: 'Plain paper', light: 'Even light, no hard shadow', sharp: 'In focus, holding still' };
 
@@ -4532,7 +4535,12 @@
     var k = Math.min(ov.width / srcW, ov.height / srcH), ox = (ov.width - srcW * k) / 2, oy = (ov.height - srcH * k) / 2, s = (srcW / res.W) * k;
     g.lineWidth = 3 * devicePixelRatio; g.strokeStyle = res.ready ? '#46C27A' : '#E0654C';
     g.beginPath(); res.quad.forEach(function (p, i) { var x = ox + p[0] * s, y = oy + p[1] * s; if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.closePath(); g.stroke();
-    if (res.item) { var b = res.item.box; g.setLineDash([6 * devicePixelRatio, 6 * devicePixelRatio]); g.strokeStyle = '#E3B35E'; g.strokeRect(ox + b[0] * s, oy + b[1] * s, (b[2] - b[0] + 1) * s, (b[3] - b[1] + 1) * s); g.setLineDash([]); }
+    if (res.item && res.item.list) {   // tint exactly the pixels read as the tool, so you can see what gets traced
+      var mc = document.createElement('canvas'); mc.width = res.W; mc.height = res.H;
+      var mg = mc.getContext('2d'), id = mg.createImageData(res.W, res.H), d = id.data;
+      res.item.list.forEach(function (p) { d[p * 4] = 227; d[p * 4 + 1] = 179; d[p * 4 + 2] = 94; d[p * 4 + 3] = 120; });
+      mg.putImageData(id, 0, 0); g.imageSmoothingEnabled = true; g.drawImage(mc, ox, oy, res.W * s, res.H * s);
+    }
   }
 
   function debug(res, extra) {
@@ -4543,11 +4551,21 @@
     }, extra || {}, { checks: res ? res.checks.map(function (c) { return c.id + ':' + (c.ok ? 'ok' : 'no') + ' (' + c.value + ')'; }) : [] , thresholds: HufnorCam.T }), null, 1);
   }
 
-  function analyzeSource(src, w, h, ctxExtra) {
-    var k = 320 / Math.max(w, h); proc.width = Math.round(w * k); proc.height = Math.round(h * k);
+  function analyzeSource(src, w, h, ctxExtra, size) {
+    var k = (size || 320) / Math.max(w, h); proc.width = Math.round(w * k); proc.height = Math.round(h * k);
     pctx.drawImage(src, 0, 0, proc.width, proc.height);
     var fr = pctx.getImageData(0, 0, proc.width, proc.height);
     return HufnorCam.analyze(fr, Object.assign({ paper: $('camPaper').value }, ctxExtra));
+  }
+
+  // printing on the sheet is too fine to see at the 320 px used for the live checks when the paper is small in the
+  // frame, so once everything else passes, re-read just the printing check at 720 px
+  function inkCheck(res, src, w, h) {
+    var hi = analyzeSource(src, w, h, { paper: $('camPaper').value }, 720);
+    var hp = (hi.checks || []).filter(function (c) { return c.id === 'plain'; })[0];
+    if (!hp) return;
+    res.checks = res.checks.map(function (c) { return c.id === 'plain' ? Object.assign({}, hp, { core: c.core }) : c; });
+    res.ink = hi.ink;
   }
 
   function loop(t) {
@@ -4555,9 +4573,16 @@
     if (t - lastT < 140 || !video.videoWidth || busy) return; lastT = t;
     lowRes = Math.max(video.videoWidth, video.videoHeight) < 3000;   // most phone browsers stream at 1080p-ish: judge detail at photo size instead
     var res = analyzeSource(video, video.videoWidth, video.videoHeight, { tilt: tilt, zoom: zoom, zoomKnown: zoomKnown, captureLong: lowRes ? 4032 : Math.max(video.videoWidth, video.videoHeight), canZoom: canZoom, minPxPerMm: 4 });
+    if (res.ready) inkCheck(res, video, video.videoWidth, video.videoHeight);
     lastRes = res; capLong = Math.max(video.videoWidth, video.videoHeight);
     renderList(res); banner(res); drawOverlay(res, video.videoWidth, video.videoHeight); debug(res);
-    steady = res.ready ? steady + 1 : 0;
+    var still = true;
+    if (res.quad && lastQuad) { var dmax = 0, diag = Math.hypot(res.W, res.H); res.quad.forEach(function (p, i) { dmax = Math.max(dmax, Math.hypot(p[0] - lastQuad[i][0], p[1] - lastQuad[i][1]) / diag); }); still = dmax <= MOVE; }
+    lastQuad = res.quad || null;
+    var plain = res.checks.every(function (c) { return c.id !== 'plain' || c.ok; });
+    steady = res.ready && still && plain ? steady + 1 : 0;
+    if (res.ready && !plain) $('camBannerText').textContent = 'Almost: use a plain sheet (no printing) and it will take the photo.';
+    else if (res.ready && steady > 0 && steady < NEED) $('camBannerText').textContent = 'Hold still… ' + Math.ceil((NEED - steady) * 0.14) + ' s';
     $('camMeter').firstChild.style.width = Math.min(100, steady / NEED * 100) + '%';
     $('camNative').hidden = !lowRes;
     $('camNative').classList.toggle('btn-oxide', res.ready); $('camNative').classList.toggle('btn-ghost', !res.ready);
@@ -4665,6 +4690,7 @@
       im.onload = function () {
         shot.src = url; shot.hidden = false; video.hidden = true; ov.hidden = false; $('camIdle').hidden = true; $('camTools').hidden = true; $('camMeter').hidden = true;
         var res = analyzeSource(im, im.naturalWidth, im.naturalHeight, { tilt: null, zoom: z || 1, zoomKnown: !!z, captureLong: Math.max(im.naturalWidth, im.naturalHeight) });
+        inkCheck(res, im, im.naturalWidth, im.naturalHeight);
         renderList(res); banner(res); drawOverlay(res, im.naturalWidth, im.naturalHeight);
         var hard = res.checks.filter(function (c) { return !c.ok && c.core; }), soft = res.checks.filter(function (c) { return !c.ok && !c.core; });
         $('camBannerText').textContent = hard.length ? hard[0].tip : soft.length ? 'Usable. ' + soft[0].tip : 'This photo passes every check.';
