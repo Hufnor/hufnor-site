@@ -469,6 +469,11 @@
   .slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;pointer-events:none}
   .slot.has b,.slot.has span{position:relative;text-shadow:0 1px 3px #000}
   .slot.req b::after{content:" *";color:var(--oxide-hi)}
+  .pcheck{grid-column:1/-1;display:grid;gap:4px;font-size:13px;line-height:1.4;padding:10px 12px;border-radius:2px;border-left:3px solid var(--mist);background:rgba(255,255,255,.04);color:#C9D2D8}
+  .pcheck b{font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--chalk)}
+  .pcheck.ok{border-left-color:#46C27A}.pcheck.warn{border-left-color:var(--amber)}.pcheck.bad{border-left-color:var(--oxide-hi)}
+  .pcheck .pnote{color:#8FA0AB}
+  .pcheck[hidden]{display:none}
   .add-tool{grid-column:1/-1;justify-self:start;background:none;border:1px solid #3C4C58;color:var(--chalk);border-radius:2px;padding:10px 14px;cursor:pointer;font:600 10.5px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase}
   .bins-progress{grid-column:1/-1;height:4px;background:#26333D;border-radius:2px;overflow:hidden;display:none}
   .bins-progress i{display:block;height:100%;width:0;background:var(--oxide-hi);transition:width .2s}
@@ -3158,23 +3163,23 @@
       <div>
         <span class="mono" style="color:var(--oxide)">Custom Gridfinity-compatible bins</span>
         <h1>Send three photos.<br>Get a bin cut to your tool.</h1>
-        <p>Lay the tool on a sheet of printer paper, take three phone photos, and upload them here. We turn the photos into a true-size outline, cut a pocket for it in a Gridfinity-compatible bin or a plain tray, and send you a quote before anything is printed.</p>
+        <p>Lay the tool on a sheet of printer paper on a table, take three phone photos, and upload them here. We turn the photos into a true-size outline, cut a pocket for it in a Gridfinity-compatible bin or a plain tray, and send you a quote before anything is printed.</p>
         <div class="hero-cta"><a class="btn btn-oxide" href="#binsForm" data-jump="binsForm">Upload photos</a><a class="btn btn-ghost" href="#binsHow" data-jump="binsHow">How it works</a></div>
       </div>
-      <figure class="bins-fig" style="margin:0"><svg viewBox="0 0 420 260" role="img" aria-label="Phone held about four feet above a tool lying on a sheet of printer paper on the floor">
-  <rect x="0" y="232" width="420" height="28" fill="#E7E8E3"/>
-  <line x1="0" y1="232" x2="420" y2="232" stroke="#8B948C" stroke-width="1.5"/>
-  <polygon points="150,232 290,232 310,222 170,222" fill="#fff" stroke="#33414B" stroke-width="1.5"/>
-  <rect x="198" y="219" width="70" height="7" rx="3" fill="#101A24"/>
-  <rect x="214" y="18" width="34" height="58" rx="6" fill="#101A24"/>
-  <circle cx="231" cy="70" r="3" fill="#A9B5BD"/>
-  <path d="M231 80 L170 220 M231 80 L292 220" stroke="#A83A2C" stroke-width="1.3" stroke-dasharray="5 5" fill="none"/>
-  <line x1="352" y1="40" x2="352" y2="226" stroke="#33414B" stroke-width="1.2"/>
-  <path d="M347 46 L352 36 L357 46 M347 220 L352 230 L357 220" stroke="#33414B" stroke-width="1.2" fill="none"/>
-  <text x="362" y="128" font-family="JetBrains Mono,monospace" font-size="12" fill="#33414B">~4 ft</text>
-  <text x="362" y="144" font-family="JetBrains Mono,monospace" font-size="10" fill="#33414B">2× zoom</text>
-  <text x="20" y="214" font-family="JetBrains Mono,monospace" font-size="10" fill="#33414B">Letter / A4 paper</text>
-  <path d="M110 210 L165 225" stroke="#33414B" stroke-width="1"/>
+      <figure class="bins-fig" style="margin:0"><svg viewBox="0 0 420 260" role="img" aria-label="Phone held flat at chest height, about 50 centimetres above a tool lying on a sheet of printer paper on a table">
+  <rect x="60" y="188" width="300" height="10" rx="2" fill="#8B948C"/>
+  <rect x="78" y="198" width="10" height="62" fill="#8B948C"/><rect x="332" y="198" width="10" height="62" fill="#8B948C"/>
+  <polygon points="140,188 280,188 296,180 156,180" fill="#fff" stroke="#33414B" stroke-width="1.5"/>
+  <rect x="188" y="177" width="66" height="7" rx="3" fill="#101A24"/>
+  <rect x="194" y="26" width="50" height="9" rx="3" fill="#101A24"/>
+  <circle cx="219" cy="38" r="3" fill="#A9B5BD"/>
+  <path d="M219 42 L150 182 M219 42 L290 182" stroke="#A83A2C" stroke-width="1.3" stroke-dasharray="5 5" fill="none"/>
+  <line x1="352" y1="32" x2="352" y2="176" stroke="#33414B" stroke-width="1.2"/>
+  <path d="M347 38 L352 28 L357 38 M347 170 L352 180 L357 170" stroke="#33414B" stroke-width="1.2" fill="none"/>
+  <text x="362" y="100" font-family="JetBrains Mono,monospace" font-size="12" fill="#33414B">~50 cm</text>
+  <text x="362" y="116" font-family="JetBrains Mono,monospace" font-size="10" fill="#33414B">chest height</text>
+  <text x="20" y="160" font-family="JetBrains Mono,monospace" font-size="10" fill="#33414B">Letter / A4 paper</text>
+  <path d="M100 164 L152 181" stroke="#33414B" stroke-width="1"/>
 </svg><figcaption>The paper is the ruler. Its known size lets us measure the tool from an ordinary phone photo.</figcaption></figure>
     </div>
 
@@ -3186,8 +3191,8 @@
 
     <h2 class="h2" style="margin:0 0 18px">The three photos</h2>
     <div class="shots">
-      <div class="shot"><svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#D2D4CE"/><rect x="40" y="10" width="120" height="110" fill="#fff" stroke="#33414B"/><path d="M62 52 h56 a10 10 0 0 1 10 10 v4 a10 10 0 0 1-10 10 h-24 l-8 26 h-12 l6-26 h-18 a10 10 0 0 1-10-10 v-4 a10 10 0 0 1 10-10z" fill="#101A24"/><g fill="#A83A2C"><circle cx="40" cy="10" r="4"/><circle cx="160" cy="10" r="4"/><circle cx="40" cy="120" r="4"/><circle cx="160" cy="120" r="4"/></g></svg><h3>1 · From above</h3><p>Tool flat on the paper, phone straight overhead.</p><ul><li>All four paper corners in the frame</li><li>Stand up and use 2× zoom (about 4 ft away)</li><li>No flash; avoid hard shadows from a window</li></ul></div>
-      <div class="shot"><svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#D2D4CE"/><rect x="40" y="10" width="120" height="110" fill="#fff" stroke="#33414B"/><rect x="58" y="58" width="84" height="16" rx="5" fill="#101A24"/><path d="M58 50 v-8 M142 50 v-8 M58 46 h84" stroke="#A83A2C" stroke-width="1.5"/><g fill="#A83A2C"><circle cx="40" cy="10" r="4"/><circle cx="160" cy="10" r="4"/><circle cx="40" cy="120" r="4"/><circle cx="160" cy="120" r="4"/></g></svg><h3>2 · On its side</h3><p>Same tool, same paper, turned on its edge.</p><ul><li>Shows how thick it is, which sets pocket depth</li><li>Same height and zoom as photo 1</li></ul></div>
+      <div class="shot"><svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#D2D4CE"/><rect x="40" y="10" width="120" height="110" fill="#fff" stroke="#33414B"/><path d="M62 52 h56 a10 10 0 0 1 10 10 v4 a10 10 0 0 1-10 10 h-24 l-8 26 h-12 l6-26 h-18 a10 10 0 0 1-10-10 v-4 a10 10 0 0 1 10-10z" fill="#101A24"/><g fill="#A83A2C"><circle cx="40" cy="10" r="4"/><circle cx="160" cy="10" r="4"/><circle cx="40" cy="120" r="4"/><circle cx="160" cy="120" r="4"/></g></svg><h3>1 · From above</h3><p>Tool flat on the paper, phone straight overhead.</p><ul><li>All four paper corners in the frame</li><li>Paper on a table; hold the phone flat at chest height, about 50 cm (20 in) up, at normal 1× zoom</li><li>No flash; avoid hard shadows from a window</li></ul></div>
+      <div class="shot"><svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#D2D4CE"/><rect x="40" y="10" width="120" height="110" fill="#fff" stroke="#33414B"/><rect x="58" y="58" width="84" height="16" rx="5" fill="#101A24"/><path d="M58 50 v-8 M142 50 v-8 M58 46 h84" stroke="#A83A2C" stroke-width="1.5"/><g fill="#A83A2C"><circle cx="40" cy="10" r="4"/><circle cx="160" cy="10" r="4"/><circle cx="40" cy="120" r="4"/><circle cx="160" cy="120" r="4"/></g></svg><h3>2 · On its side</h3><p>Same tool, same paper, turned on its edge.</p><ul><li>Shows how thick it is, which sets pocket depth</li><li>Same height as photo 1</li></ul></div>
       <div class="shot"><svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#D2D4CE"/><rect x="30" y="28" width="140" height="74" rx="6" fill="#101A24"/><rect x="46" y="44" width="108" height="42" fill="#F6F6F3"/><path d="M56 56 h60 M56 66 h86 M56 76 h40" stroke="#33414B" stroke-width="4"/></svg><h3>3 · The label</h3><p>Brand and model, close up.</p><ul><li>Lets us check the outline against published dimensions</li><li>Skip it if the tool has no label</li></ul></div>
     </div>
 
@@ -3262,7 +3267,7 @@
   .cam-list { list-style:none; padding:0; margin:14px 0 0; display:grid; gap:0; border-top:1px solid var(--line); }
   .cam-list li { display:grid; grid-template-columns:18px 1fr auto; gap:10px; align-items:baseline; padding:10px 2px; border-bottom:1px solid var(--line); }
   .cam-list li i { width:10px; height:10px; border-radius:50%; background:var(--cam-wait); align-self:center; }
-  .cam-list li.ok i { background:var(--cam-ok); } .cam-list li.bad i { background:var(--cam-bad); }
+  .cam-list li.ok i { background:var(--cam-ok); } .cam-list li.bad i { background:var(--cam-bad); } .cam-list li.warn i { background:var(--amber); }
   .cam-list li span { min-width:0; }
   .cam-list li small { display:block; color:var(--slate); margin-top:2px; }
   .cam-list li.ok small { display:none; }
@@ -3279,7 +3284,7 @@
     <div class="wrap">
       <span class="mono" style="color:var(--oxide)">Photo check · test page</span>
       <h1>Top photo coach</h1>
-      <p class="lede">Put the tool on a sheet of plain paper on a table, then hold your phone flat over it at about chest height. Each check turns green when it's right, and the photo is taken by itself once everything is green for a second.</p>
+      <p class="lede">Put the tool on a sheet of plain paper on a table, then hold your phone flat over it at about chest height. Each check turns green when it's right. Red ones need fixing; amber ones are only advice.</p>
 
       <div class="cam-stage" id="camStage">
         <video id="camVideo" playsinline muted hidden></video>
@@ -3296,7 +3301,8 @@
       <div class="cam-tools" id="camTools" hidden>
         <span id="camLenses"></span>
         <select id="camPaper" aria-label="Paper size"><option value="auto">Paper: auto</option><option value="letter">Letter</option><option value="a4">A4</option></select>
-        <button class="cam-chip" type="button" id="camSnap">Take photo now</button>
+        <label class="btn btn-ghost" id="camNative" hidden>Take photo<input type="file" id="camNativeIn" accept="image/*" capture="environment" hidden></label>
+        <button class="cam-chip" type="button" id="camSnap">Use this frame</button>
         <button class="cam-chip" type="button" id="camStop">Stop</button>
       </div>
 
@@ -4113,7 +4119,25 @@
     var old = slot.querySelector('img'); if (old) old.remove();
     slot.classList.toggle('has', !!f);
     if (f) { slot.querySelector('span').textContent = f.name.length > 22 ? f.name.slice(0, 20) + '…' : f.name; if (/jpe?g|png|webp/i.test(f.type)) { var im = document.createElement('img'); im.alt = ''; im.src = URL.createObjectURL(f); slot.appendChild(im); } }
+    photoCheck(slot, f);
   });
+  // instant photo check (advice only, never blocks the upload)
+  function photoCheck(slot, f) {
+    var card = slot.closest('.tool-card'), role = slot.dataset.role, box = card.querySelector('.pcheck[data-role="' + role + '"]');
+    if (!box) { box = document.createElement('div'); box.className = 'pcheck'; box.dataset.role = role; var top = card.querySelector('.pcheck[data-role="top"]'); if (role === 'side' && top) top.after(box); else card.querySelector('.slots').after(box); }
+    if (!f || role === 'label' || !window.HufnorCam || !/jpe?g|png|webp/i.test(f.type)) { box.hidden = true; return; }
+    box.hidden = false; box.className = 'pcheck'; box.textContent = 'Checking the ' + (role === 'top' ? 'top' : 'side') + ' photo…';
+    HufnorCam.checkFile(f).then(function (r) {
+      var keep = role === 'top' ? null : { paper: 1, corners: 1, plain: 1, light: 1 };
+      var bad = r.checks.filter(function (c) { return !c.ok && (!keep || keep[c.id]); });
+      var hard = bad.filter(function (c) { return c.core; }), soft = bad.filter(function (c) { return !c.core; });
+      box.className = 'pcheck ' + (hard.length ? 'bad' : soft.length ? 'warn' : 'ok');
+      box.innerHTML = '';
+      var h = document.createElement('b'); h.textContent = (role === 'top' ? 'Top photo: ' : 'Side photo: ') + (hard.length ? 'could be better' : soft.length ? 'usable' : 'looks good'); box.appendChild(h);
+      bad.slice(0, 3).forEach(function (c) { var p = document.createElement('span'); p.textContent = c.tip; box.appendChild(p); });
+      if (hard.length) { var n = document.createElement('span'); n.className = 'pnote'; n.textContent = 'You can still send it. A clearer photo just means a closer fit.'; box.appendChild(n); }
+    }).catch(function () { box.hidden = true; });
+  }
   document.getElementById('binsAdd').addEventListener('click', addTool);
   addTool();
 
@@ -4192,8 +4216,8 @@
   var T = {
     minFill: 0.10,        // paper must cover >=10 % of the frame to be trusted
     edgeMargin: 0.015,    // corners must be this far (fraction of frame) from the frame edge
-    tiltDeg: 5,           // phone tilt allowed (from the motion sensor)
-    squareDeg: 6,         // corner angles allowed off 90 deg (used when there is no motion sensor)
+    tiltDeg: 8,           // phone tilt allowed (from the motion sensor)
+    squareDeg: 8,         // corner angles allowed off 90 deg (used when there is no motion sensor)
     minHeightMm: 350,     // phone high enough that the whole sheet fits (table height, chest-high phone)
     maxHeightMm: 900,     // above this, detail drops; the tracer corrects parallax from the measured height
     minPxPerMm: 4,        // resolution at capture size
@@ -4388,11 +4412,56 @@
     out.sharp = sharp;
     add('sharp', sharp >= T.sharp, 'In focus, holding still', sharp.toFixed(0), 'Hold still for a second. Tap the screen on the tool to focus.');
 
-    out.ready = out.checks.every(function (c) { return c.ok; });
+    var ADVISORY = { plain: 1, light: 1, sharp: 1 };
+    out.checks.forEach(function (c) { c.core = !ADVISORY[c.id]; });
+    out.ready = out.checks.every(function (c) { return c.ok || !c.core; });   // advisory checks warn but never block
+    out.perfect = out.checks.every(function (c) { return c.ok; });
     return out;
   }
 
-  root.HufnorCam = { analyze: analyze, T: T, PAPER: PAPER };
+  // 35 mm-equivalent focal length from a JPEG's EXIF, as a multiple of the 26 mm main lens (null if absent)
+  function exifZoom(buf) {
+    try {
+      var v = new DataView(buf); if (v.getUint16(0) !== 0xFFD8) return null;
+      var o = 2;
+      while (o < v.byteLength - 4) {
+        var m = v.getUint16(o), len = v.getUint16(o + 2);
+        if (m === 0xFFE1 && v.getUint32(o + 4) === 0x45786966) {
+          var t = o + 10, le = v.getUint16(t) === 0x4949, g16 = function (p) { return v.getUint16(p, le); }, g32 = function (p) { return v.getUint32(p, le); };
+          var ifd = t + g32(t + 4), n = g16(ifd), exif = 0, i, e;
+          for (i = 0; i < n; i++) { e = ifd + 2 + i * 12; if (g16(e) === 0x8769) exif = t + g32(e + 8); }
+          if (!exif) return null;
+          n = g16(exif);
+          for (i = 0; i < n; i++) { e = exif + 2 + i * 12; if (g16(e) === 0xA405) return g16(e + 8) / 26; }
+          return null;
+        }
+        if ((m & 0xFF00) !== 0xFF00) return null;
+        o += 2 + len;
+      }
+    } catch (err) {}
+    return null;
+  }
+
+  // check a still photo File/Blob; resolves the analyze() result plus {zoomKnown}
+  function checkFile(file, opts) {
+    return file.arrayBuffer().then(function (buf) {
+      var z = exifZoom(buf);
+      return new Promise(function (res, rej) {
+        var url = URL.createObjectURL(file), im = new Image();
+        im.onload = function () {
+          var k = 320 / Math.max(im.naturalWidth, im.naturalHeight), cv = document.createElement('canvas');
+          cv.width = Math.round(im.naturalWidth * k); cv.height = Math.round(im.naturalHeight * k);
+          var g = cv.getContext('2d', { willReadFrequently: true }); g.drawImage(im, 0, 0, cv.width, cv.height);
+          var r = analyze(g.getImageData(0, 0, cv.width, cv.height), Object.assign({ tilt: null, zoom: z || 1, zoomKnown: !!z, captureLong: Math.max(im.naturalWidth, im.naturalHeight) }, opts || {}));
+          r.zoomKnown = !!z; r.image = im; r.url = url; res(r);
+        };
+        im.onerror = function () { rej(new Error('This photo format can’t be checked in the browser (it will still upload).')); };
+        im.src = url;
+      });
+    });
+  }
+
+  root.HufnorCam = { analyze: analyze, exifZoom: exifZoom, checkFile: checkFile, T: T, PAPER: PAPER };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -4402,9 +4471,9 @@
   'use strict';
   function $(id) { return document.getElementById(id); }
   var stage = $('camStage'), video = $('camVideo'), ov = $('camOverlay'), shot = $('camShot'), list = $('camList');
-  var stream = null, track = null, raf = 0, tilt = null, steady = 0, lastT = 0, zoom = 1, zoomKnown = false, capLong = 0, canZoom = false, lastRes = null, busy = false;
+  var lowRes = false, stream = null, track = null, raf = 0, tilt = null, steady = 0, lastT = 0, zoom = 1, zoomKnown = false, capLong = 0, canZoom = false, lastRes = null, busy = false;
   var proc = document.createElement('canvas'), pctx = proc.getContext('2d', { willReadFrequently: true });
-  var NEED = 8; // consecutive good frames (~1.2 s)
+  var NEED = 5; // consecutive good frames (~0.7 s)
   var ORDER = ['paper', 'corners', 'level', 'distance', 'detail', 'item', 'clear', 'plain', 'light', 'sharp'];
   var LABELS = { paper: 'Paper in view', corners: 'All 4 corners showing', level: 'Pointing straight down', distance: 'Phone at a good height', detail: 'Enough detail', item: 'Tool on the paper', clear: 'Tool clear of the paper edge', plain: 'Plain paper', light: 'Even light, no hard shadow', sharp: 'In focus, holding still' };
 
@@ -4413,7 +4482,7 @@
     list.innerHTML = '';
     ORDER.forEach(function (id) {
       var c = by[id], li = document.createElement('li');
-      li.className = c ? (c.ok ? 'ok' : 'bad') : '';
+      li.className = c ? (c.ok ? 'ok' : (c.core ? 'bad' : 'warn')) : '';
       var i = document.createElement('i'), sp = document.createElement('span'), cd = document.createElement('code');
       sp.textContent = c ? c.label : LABELS[id];
       if (c && !c.ok) { var sm = document.createElement('small'); sm.textContent = c.tip; sp.appendChild(sm); }
@@ -4426,8 +4495,8 @@
   function banner(res) {
     var b = $('camBanner'), t = $('camBannerText'); b.hidden = false;
     if (!res) { b.className = 'cam-banner'; t.textContent = 'Looking for the paper…'; return; }
-    var bad = res.checks.filter(function (c) { return !c.ok; });
-    if (!bad.length) { b.className = 'cam-banner ok'; t.textContent = 'Hold still…'; }
+    var bad = res.checks.filter(function (c) { return !c.ok && c.core; });
+    if (!bad.length) { b.className = 'cam-banner ok'; t.textContent = lowRes ? 'Good spot. Hold it and tap Take photo.' : 'Hold still…'; }
     else { b.className = 'cam-banner bad'; t.textContent = bad[0].tip; }
   }
 
@@ -4459,12 +4528,15 @@
   function loop(t) {
     raf = requestAnimationFrame(loop);
     if (t - lastT < 140 || !video.videoWidth || busy) return; lastT = t;
-    var res = analyzeSource(video, video.videoWidth, video.videoHeight, { tilt: tilt, zoom: zoom, zoomKnown: zoomKnown, captureLong: Math.max(video.videoWidth, video.videoHeight), canZoom: canZoom, minPxPerMm: 4 });
+    lowRes = Math.max(video.videoWidth, video.videoHeight) < 3000;   // most phone browsers stream at 1080p-ish: judge detail at photo size instead
+    var res = analyzeSource(video, video.videoWidth, video.videoHeight, { tilt: tilt, zoom: zoom, zoomKnown: zoomKnown, captureLong: lowRes ? 4032 : Math.max(video.videoWidth, video.videoHeight), canZoom: canZoom, minPxPerMm: 4 });
     lastRes = res; capLong = Math.max(video.videoWidth, video.videoHeight);
     renderList(res); banner(res); drawOverlay(res, video.videoWidth, video.videoHeight); debug(res);
     steady = res.ready ? steady + 1 : 0;
     $('camMeter').firstChild.style.width = Math.min(100, steady / NEED * 100) + '%';
-    if (steady >= NEED) capture('auto');
+    $('camNative').hidden = !lowRes;
+    $('camNative').classList.toggle('btn-oxide', res.ready); $('camNative').classList.toggle('btn-ghost', !res.ready);
+    if (steady >= NEED && !lowRes) capture('auto');
   }
 
   function capture(why) {
@@ -4557,38 +4629,20 @@
   $('camPaper').addEventListener('change', function () { steady = 0; });
 
   // still photos: same checks, zoom read from the photo's own EXIF (35 mm-equivalent focal length)
-  function exifZoom(buf) {
-    try {
-      var v = new DataView(buf); if (v.getUint16(0) !== 0xFFD8) return null;
-      var o = 2;
-      while (o < v.byteLength - 4) {
-        var m = v.getUint16(o), len = v.getUint16(o + 2);
-        if (m === 0xFFE1 && v.getUint32(o + 4) === 0x45786966) {
-          var t = o + 10, le = v.getUint16(t) === 0x4949, g16 = function (p) { return v.getUint16(p, le); }, g32 = function (p) { return v.getUint32(p, le); };
-          var ifd = t + g32(t + 4), n = g16(ifd), exif = 0;
-          for (var i = 0; i < n; i++) { var e = ifd + 2 + i * 12; if (g16(e) === 0x8769) exif = t + g32(e + 8); }
-          if (!exif) return null;
-          n = g16(exif);
-          for (i = 0; i < n; i++) { e = exif + 2 + i * 12; if (g16(e) === 0xA405) return g16(e + 8) / 26; }
-          return null;
-        }
-        o += 2 + len;
-      }
-    } catch (err) {}
-    return null;
-  }
+  $('camNativeIn').addEventListener('change', function () { var ev = new Event('change'); $('camFile').files = this.files; $('camFile').dispatchEvent(ev); });
   $('camFile').addEventListener('change', function () {
     var f = this.files && this.files[0]; if (!f) return; this.value = '';
     stopStream();
     f.arrayBuffer().then(function (buf) {
-      var z = exifZoom(buf), url = URL.createObjectURL(f), im = new Image();
+      var z = HufnorCam.exifZoom(buf), url = URL.createObjectURL(f), im = new Image();
       im.onload = function () {
         shot.src = url; shot.hidden = false; video.hidden = true; ov.hidden = false; $('camIdle').hidden = true; $('camTools').hidden = true; $('camMeter').hidden = true;
         var res = analyzeSource(im, im.naturalWidth, im.naturalHeight, { tilt: null, zoom: z || 1, zoomKnown: !!z, captureLong: Math.max(im.naturalWidth, im.naturalHeight) });
         renderList(res); banner(res); drawOverlay(res, im.naturalWidth, im.naturalHeight);
-        $('camBannerText').textContent = res.ready ? 'This photo passes every check.' : res.checks.filter(function (c) { return !c.ok; })[0].tip;
+        var hard = res.checks.filter(function (c) { return !c.ok && c.core; }), soft = res.checks.filter(function (c) { return !c.ok && !c.core; });
+        $('camBannerText').textContent = hard.length ? hard[0].tip : soft.length ? 'Usable. ' + soft[0].tip : 'This photo passes every check.';
+        $('camSave').href = url; $('camResult').hidden = false;
         debug(res, { file: f.name, exifZoom: z && +z.toFixed(2) });
-        $('camResult').hidden = true;
       };
       im.src = url;
     });
