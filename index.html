@@ -3239,6 +3239,86 @@
 </div></div>
 <div data-page="thanks"><div class="wrap" id="thanksView" style="padding-top:clamp(48px,7vw,90px);padding-bottom:clamp(48px,7vw,90px)"></div></div>
 <div data-page="notfound"><div class="wrap"><div class="empty" style="padding:110px 0"><h3>That page isn’t here.</h3><p>It may have moved when we updated the shop.</p><a class="btn btn-oxide btn-sm" href="#/shop">Go to the shop</a></div></div></div>
+<style>
+  .cam [hidden] { display:none !important; }
+  .cam { --cam-ok:#2F7D4F; --cam-bad:#A83A2C; --cam-wait:#8B948C; padding-block:28px 64px; }
+  .cam .wrap { max-width:760px; }
+  .cam h1 { font-family:var(--f-display); font-size:clamp(28px,6vw,40px); line-height:1.05; margin:6px 0 10px; text-wrap:balance; }
+  .cam p.lede { margin:0 0 18px; color:var(--slate); max-width:62ch; }
+  .cam-stage { position:relative; background:var(--ink); border-radius:10px; overflow:hidden; aspect-ratio:3/4; max-height:72vh; margin:0 auto; width:100%; max-width:100%; display:flex; align-items:center; justify-content:center; }
+  .cam-stage video, .cam-stage canvas.ov, .cam-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+  .cam-stage .idle { position:relative; z-index:2; color:var(--chalk); text-align:center; padding:24px; display:grid; gap:14px; justify-items:center; }
+  .cam-stage .idle p { margin:0; color:var(--mist); max-width:34ch; }
+  .cam-banner { position:absolute; left:10px; right:10px; bottom:10px; z-index:3; border-radius:8px; padding:10px 14px; font:600 15px/1.3 var(--f-body); color:#fff; background:rgba(16,26,36,.82); display:flex; gap:10px; align-items:center; }
+  .cam-banner i { flex:none; width:12px; height:12px; border-radius:50%; background:var(--cam-wait); }
+  .cam-banner.ok i { background:#46C27A; } .cam-banner.bad i { background:var(--oxide-hi); }
+  .cam-meter { position:absolute; left:0; right:0; top:0; height:4px; z-index:3; background:rgba(255,255,255,.12); }
+  .cam-meter b { display:block; height:100%; width:0; background:#46C27A; transition:width .15s linear; }
+  .cam-tools { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px; align-items:center; }
+  .cam-chip { font:600 13px/1 var(--f-mono); padding:9px 12px; border-radius:999px; border:1px solid var(--line); background:var(--chalk); color:var(--ink); cursor:pointer; }
+  .cam-chip[aria-pressed="true"] { background:var(--ink); color:var(--chalk); border-color:var(--ink); }
+  .cam-chip:focus-visible, .cam .btn:focus-visible { outline:2px solid var(--oxide); outline-offset:2px; }
+  .cam-tools select { font:600 13px/1 var(--f-mono); padding:8px 10px; border-radius:999px; border:1px solid var(--line); background:var(--chalk); color:var(--ink); }
+  .cam-list { list-style:none; padding:0; margin:14px 0 0; display:grid; gap:0; border-top:1px solid var(--line); }
+  .cam-list li { display:grid; grid-template-columns:18px 1fr auto; gap:10px; align-items:baseline; padding:10px 2px; border-bottom:1px solid var(--line); }
+  .cam-list li i { width:10px; height:10px; border-radius:50%; background:var(--cam-wait); align-self:center; }
+  .cam-list li.ok i { background:var(--cam-ok); } .cam-list li.bad i { background:var(--cam-bad); }
+  .cam-list li span { min-width:0; }
+  .cam-list li small { display:block; color:var(--slate); margin-top:2px; }
+  .cam-list li.ok small { display:none; }
+  .cam-list li code { font:12px/1.3 var(--f-mono); color:var(--slate); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .cam-result { margin-top:18px; display:grid; gap:12px; }
+  .cam-result .row { display:flex; flex-wrap:wrap; gap:10px; }
+  .cam-note { font-size:13px; color:var(--slate); }
+  .cam details { margin-top:20px; font-size:13px; }
+  .cam details pre { overflow-x:auto; background:var(--chalk); border:1px solid var(--line); border-radius:6px; padding:10px; font:12px/1.45 var(--f-mono); }
+  @media (prefers-reduced-motion: reduce) { .cam-meter b { transition:none; } }
+</style>
+<div data-page="camtest">
+  <section class="cam">
+    <div class="wrap">
+      <span class="mono" style="color:var(--oxide)">Photo check · test page</span>
+      <h1>Top photo coach</h1>
+      <p class="lede">Point your phone straight down at the tool on its sheet of paper. Each check turns green when it's right, and the photo is taken by itself once everything is green for a second.</p>
+
+      <div class="cam-stage" id="camStage">
+        <video id="camVideo" playsinline muted hidden></video>
+        <img id="camShot" alt="Captured photo" hidden>
+        <canvas class="ov" id="camOverlay" hidden></canvas>
+        <div class="cam-meter" id="camMeter" hidden><b></b></div>
+        <div class="idle" id="camIdle">
+          <button class="btn btn-oxide" type="button" id="camStart">Start camera</button>
+          <p>Your browser will ask to use the camera and, on iPhone, motion sensors. Nothing is uploaded from this page.</p>
+        </div>
+        <div class="cam-banner" id="camBanner" hidden><i></i><span id="camBannerText">Looking for the paper…</span></div>
+      </div>
+
+      <div class="cam-tools" id="camTools" hidden>
+        <span id="camLenses"></span>
+        <select id="camPaper" aria-label="Paper size"><option value="auto">Paper: auto</option><option value="letter">Letter</option><option value="a4">A4</option></select>
+        <button class="cam-chip" type="button" id="camSnap">Take photo now</button>
+        <button class="cam-chip" type="button" id="camStop">Stop</button>
+      </div>
+
+      <ul class="cam-list" id="camList"></ul>
+
+      <div class="cam-result" id="camResult" hidden>
+        <div class="row">
+          <a class="btn btn-oxide" id="camSave" download="top.jpg" href="#">Save photo</a>
+          <button class="btn btn-ghost" type="button" id="camRetake">Retake</button>
+        </div>
+        <p class="cam-note" id="camResNote"></p>
+      </div>
+
+      <p class="cam-note" style="margin-top:22px">No camera here? <label style="text-decoration:underline;cursor:pointer">Check a photo you already took<input type="file" id="camFile" accept="image/*" hidden></label>.</p>
+
+      <details>
+        <summary>Numbers for tuning</summary>
+        <pre id="camDebug">Start the camera or check a photo.</pre>
+      </details>
+    </div>
+  </section>
+</div>
 </main>
 <footer class="ftr">
   <div class="wrap">
@@ -3784,6 +3864,7 @@
     else if (r === 'p') { if (viewProduct(parts[1])) { page('product'); title = bySlug(parts[1]).name + ' | Hufnor Design'; } else page('notfound'); nav = 'shop'; }
     else if (r === 'thanks') { page('thanks'); viewThanks(); title = 'Thank you | Hufnor Design'; }
     else if (r === 'shipping' || r === 'returns') { page('shipping'); title = 'Shipping & returns | Hufnor Design'; }
+    else if (r === 'camtest') { page('camtest'); title = 'Photo check | Hufnor Design'; nav = 'custom'; }
     else if (r === 'bins') { page('bins'); title = 'Custom tool bins from photos | Hufnor Design'; nav = 'custom'; }
     else if (r === 'order') { page('order'); viewOrder(parts[1] || ''); title = 'Order status | Hufnor Design'; }
     else if (r === 'custom') { page('custom'); if (parts[1] === 'commission') { $('commission').open = true; setPath('commission'); jump = 'commission'; nav = 'commission'; } title = 'Custom parts | Hufnor Design'; }
@@ -4097,6 +4178,422 @@
       .catch(function (err) { fail('The upload didn’t finish (' + (err && err.message || 'network') + ').'); });
   });
   document.addEventListener('click', function (e) { var a = e.target.closest('[data-jump]'); if (!a) return; e.preventDefault(); var el = document.getElementById(a.dataset.jump); if (el) el.scrollIntoView({ behavior: 'smooth' }); });
+})();
+</script>
+<!-- ============================ PHOTO COACH (#/camtest, not linked yet) ============================ -->
+<script>
+/* Hufnor photo coach: live checks for the "top" photo of a tool lying on Letter/A4 paper.
+   Pure browser JS, no libraries. analyze() works on any RGBA frame (live video or an uploaded photo).
+   Thresholds are first guesses to tune with real phones; every number is shown on the debug panel. */
+(function (root) {
+  'use strict';
+
+  var PAPER = { letter: [279.4, 215.9], a4: [297, 210] };
+  var T = {
+    minFill: 0.10,        // paper must cover >=10 % of the frame to be trusted
+    edgeMargin: 0.015,    // corners must be this far (fraction of frame) from the frame edge
+    tiltDeg: 5,           // phone tilt allowed (from the motion sensor)
+    squareDeg: 6,         // corner angles allowed off 90 deg (used when there is no motion sensor)
+    minHeightMm: 1000,    // estimated camera height above the paper (parallax)
+    minPxPerMm: 4,        // resolution at capture size
+    sharp: 18,            // Laplacian score
+    busy: 0.02,           // dark speckle (printing) on the paper outside the item, fraction of paper area
+    light: 0.22,          // brightest vs darkest paper quadrant, relative
+    itemMin: 0.03,        // item must cover >=3 % of the paper
+    itemEdge: 0.035       // item must stay this far (fraction of paper size) inside the paper edge
+  };
+
+  function otsu(hist, n) {
+    var sum = 0, i; for (i = 0; i < 256; i++) sum += i * hist[i];
+    var sumB = 0, wB = 0, best = 0, th = 128;
+    for (i = 0; i < 256; i++) {
+      wB += hist[i]; if (!wB) continue; var wF = n - wB; if (!wF) break;
+      sumB += i * hist[i]; var mB = sumB / wB, mF = (sum - sumB) / wF, v = wB * wF * (mB - mF) * (mB - mF);
+      if (v > best) { best = v; th = i; }
+    }
+    return th;
+  }
+
+  // largest 4-connected component of mask==val; returns {idx:Int32Array of pixel indices, n}
+  function largest(mask, W, H, val, within) {
+    var seen = new Uint8Array(W * H), stack = new Int32Array(W * H), best = null, bestN = 0;
+    for (var s = 0; s < W * H; s++) {
+      if (seen[s] || mask[s] !== val || (within && !within[s])) continue;
+      var top = 0, n = 0, list = []; stack[top++] = s; seen[s] = 1;
+      while (top) {
+        var p = stack[--top]; list.push(p); n++;
+        var x = p % W, y = (p - x) / W;
+        if (x > 0) { var q = p - 1; if (!seen[q] && mask[q] === val && (!within || within[q])) { seen[q] = 1; stack[top++] = q; } }
+        if (x < W - 1) { q = p + 1; if (!seen[q] && mask[q] === val && (!within || within[q])) { seen[q] = 1; stack[top++] = q; } }
+        if (y > 0) { q = p - W; if (!seen[q] && mask[q] === val && (!within || within[q])) { seen[q] = 1; stack[top++] = q; } }
+        if (y < H - 1) { q = p + W; if (!seen[q] && mask[q] === val && (!within || within[q])) { seen[q] = 1; stack[top++] = q; } }
+      }
+      if (n > bestN) { bestN = n; best = list; }
+    }
+    return { list: best || [], n: bestN };
+  }
+
+  function hull(pts) { // monotone chain, pts [[x,y]...]
+    pts.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+    function cross(o, a, b) { return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); }
+    var lo = [], up = [], i;
+    for (i = 0; i < pts.length; i++) { while (lo.length >= 2 && cross(lo[lo.length - 2], lo[lo.length - 1], pts[i]) <= 0) lo.pop(); lo.push(pts[i]); }
+    for (i = pts.length - 1; i >= 0; i--) { while (up.length >= 2 && cross(up[up.length - 2], up[up.length - 1], pts[i]) <= 0) up.pop(); up.push(pts[i]); }
+    up.pop(); lo.pop(); return lo.concat(up);
+  }
+
+  // 4 corners from the hull: the hull points farthest along the 4 diagonals, ordered TL, TR, BR, BL
+  function quadFrom(h) {
+    var tl = h[0], tr = h[0], br = h[0], bl = h[0];
+    h.forEach(function (p) {
+      if (p[0] + p[1] < tl[0] + tl[1]) tl = p;
+      if (p[0] - p[1] > tr[0] - tr[1]) tr = p;
+      if (p[0] + p[1] > br[0] + br[1]) br = p;
+      if (p[1] - p[0] > bl[1] - bl[0]) bl = p;
+    });
+    return [tl, tr, br, bl];
+  }
+  // a paper rotated ~45 deg breaks the diagonal trick; refine by picking the 4 hull points that make the biggest quad
+  function bestQuad(h) {
+    var q = quadFrom(h);
+    if (h.length > 60) { var step = Math.ceil(h.length / 60), s = []; for (var i = 0; i < h.length; i += step) s.push(h[i]); h = s; }
+    var n = h.length, best = area(q), bq = q;
+    if (n < 4) return q;
+    // rotating search: for each pair i<k as a diagonal, best j between and l after
+    for (var a = 0; a < n; a++) for (var c = a + 2; c < n; c++) {
+      var bj = -1, bjA = -1, bl = -1, blA = -1;
+      for (var j = a + 1; j < c; j++) { var t = tri(h[a], h[j], h[c]); if (t > bjA) { bjA = t; bj = j; } }
+      for (var l = c + 1; l < n + a; l++) { var t2 = tri(h[c], h[l % n], h[a]); if (t2 > blA) { blA = t2; bl = l % n; } }
+      if (bj >= 0 && bl >= 0 && bjA + blA > best) { best = bjA + blA; bq = [h[a], h[bj], h[c], h[bl]]; }
+    }
+    return order(bq);
+  }
+  function tri(a, b, c) { return Math.abs((b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])) / 2; }
+  function area(q) { return tri(q[0], q[1], q[2]) + tri(q[0], q[2], q[3]); }
+  function order(q) { // TL, TR, BR, BL by angle around centroid
+    var cx = 0, cy = 0; q.forEach(function (p) { cx += p[0] / 4; cy += p[1] / 4; });
+    q = q.slice().sort(function (a, b) { return Math.atan2(a[1] - cy, a[0] - cx) - Math.atan2(b[1] - cy, b[0] - cx); });
+    // atan2 order starts near -pi (left); rotate so the point with smallest x+y is first
+    var k = 0; for (var i = 1; i < 4; i++) if (q[i][0] + q[i][1] < q[k][0] + q[k][1]) k = i;
+    return q.slice(k).concat(q.slice(0, k));
+  }
+  function dist(a, b) { return Math.hypot(a[0] - b[0], a[1] - b[1]); }
+  function angleAt(p, a, b) { var v1 = [a[0] - p[0], a[1] - p[1]], v2 = [b[0] - p[0], b[1] - p[1]]; return Math.acos((v1[0] * v2[0] + v1[1] * v2[1]) / (Math.hypot(v1[0], v1[1]) * Math.hypot(v2[0], v2[1]) || 1)) * 180 / Math.PI; }
+  function inside(q, x, y) { // convex quad, point-in-polygon by cross signs
+    var s = 0; for (var i = 0; i < 4; i++) { var a = q[i], b = q[(i + 1) % 4], c = (b[0] - a[0]) * (y - a[1]) - (b[1] - a[1]) * (x - a[0]); if (c === 0) continue; var sg = c > 0 ? 1 : -1; if (!s) s = sg; else if (sg !== s) return false; } return true;
+  }
+  function shrinkQ(q, k) { var cx = 0, cy = 0; q.forEach(function (p) { cx += p[0] / 4; cy += p[1] / 4; }); return q.map(function (p) { return [cx + (p[0] - cx) * k, cy + (p[1] - cy) * k]; }); }
+
+  /* frame: {data, width, height} RGBA. ctx: {tilt: deg|null, zoom, captureLong: px of the full-res frame, paper:'auto'|'letter'|'a4'} */
+  function analyze(frame, ctx) {
+    ctx = ctx || {};
+    var W = frame.width, H = frame.height, d = frame.data, N = W * H, lum = new Uint8Array(N), hist = new Uint32Array(256), i;
+    for (i = 0; i < N; i++) { var v = (d[i * 4] * 77 + d[i * 4 + 1] * 150 + d[i * 4 + 2] * 29) >> 8; lum[i] = v; hist[v]++; }
+    var th = otsu(hist, N), bright = new Uint8Array(N);
+    for (i = 0; i < N; i++) bright[i] = lum[i] > th ? 1 : 0;
+    var out = { W: W, H: H, threshold: th, checks: [], quad: null, item: null };
+    var comp = largest(bright, W, H, 1);
+    var fill = comp.n / N;
+    // paper outline: per-row extremes of the component -> hull
+    var rowMin = new Int32Array(H).fill(W), rowMax = new Int32Array(H).fill(-1), border = 0;
+    comp.list.forEach(function (p) { var x = p % W, y = (p - x) / W; if (x < rowMin[y]) rowMin[y] = x; if (x > rowMax[y]) rowMax[y] = x; if (x === 0 || y === 0 || x === W - 1 || y === H - 1) border++; });
+    var pts = []; for (var y = 0; y < H; y++) if (rowMax[y] >= 0) { pts.push([rowMin[y], y]); pts.push([rowMax[y], y]); }
+    var found = fill >= T.minFill && pts.length > 8;
+    function add(id, ok, label, value, tip) { out.checks.push({ id: id, ok: ok, label: label, value: value, tip: tip }); }
+    if (!found) {
+      add('paper', false, 'Paper in view', Math.round(fill * 100) + '% of frame', 'Lay the tool on a plain sheet of Letter or A4 paper and fit the whole sheet in the frame.');
+      out.ready = false; return out;
+    }
+    var h = hull(pts), q = bestQuad(h); out.quad = q;
+    var sides = [dist(q[0], q[1]), dist(q[1], q[2]), dist(q[2], q[3]), dist(q[3], q[0])];
+    var longPx = Math.max((sides[0] + sides[2]) / 2, (sides[1] + sides[3]) / 2), shortPx = Math.min((sides[0] + sides[2]) / 2, (sides[1] + sides[3]) / 2);
+    var aspect = longPx / shortPx;
+    var paper = ctx.paper && ctx.paper !== 'auto' ? ctx.paper : (Math.abs(aspect - 1.294) <= Math.abs(aspect - 1.414) ? 'letter' : 'a4');
+    out.paper = paper;
+    var hullArea = area(q), solidity = comp.n / hullArea;
+    add('paper', solidity > 0.55, 'Paper in view', (paper === 'a4' ? 'A4' : 'Letter') + ', ' + Math.round(fill * 100) + '% of frame', 'Use one plain sheet on a darker floor or table so the paper stands out.');
+
+    var mx = W * T.edgeMargin, my = H * T.edgeMargin;
+    var cornersIn = border < 4 && q.every(function (p) { return p[0] > mx && p[0] < W - mx && p[1] > my && p[1] < H - my; });
+    add('corners', cornersIn, 'All 4 corners showing', cornersIn ? 'yes' : 'cut off', 'Move back or zoom out until all four corners of the paper are inside the frame.');
+
+    var angs = [angleAt(q[0], q[3], q[1]), angleAt(q[1], q[0], q[2]), angleAt(q[2], q[1], q[3]), angleAt(q[3], q[2], q[0])];
+    var worstAng = Math.max.apply(null, angs.map(function (a) { return Math.abs(a - 90); }));
+    var aspectErr = Math.abs(aspect - (paper === 'a4' ? 1.414 : 1.294)) / (paper === 'a4' ? 1.414 : 1.294);
+    if (ctx.tilt != null) add('level', ctx.tilt <= T.tiltDeg && worstAng <= T.squareDeg * 1.6, 'Phone flat, pointing straight down', ctx.tilt.toFixed(1) + '° tilt', 'Hold the phone flat over the middle of the paper, screen facing up at you.');
+    else add('level', worstAng <= T.squareDeg && aspectErr < 0.06, 'Pointing straight down', 'corners off square by ' + worstAng.toFixed(1) + '°', 'Hold the phone flat over the middle of the paper so the sheet looks like a rectangle, not a trapezoid.');
+
+    // camera height from the paper's apparent size: pinhole with an assumed 26 mm-equivalent main lens
+    var zoom = ctx.zoom || 1, longFrame = Math.max(W, H);
+    var fPx = (longFrame / 2) * (26 * zoom) / 18;
+    var paperLongMm = PAPER[paper][0];
+    var heightMm = fPx * paperLongMm / longPx;
+    out.heightMm = heightMm;
+    var capLong = ctx.captureLong || longFrame, pxPerMm = longPx * (capLong / longFrame) / paperLongMm;
+    out.pxPerMm = pxPerMm;
+    var farOk = heightMm >= T.minHeightMm, resOk = pxPerMm >= (ctx.minPxPerMm || T.minPxPerMm);
+    add('distance', farOk, 'Far enough away', '≈' + (heightMm / 1000).toFixed(2) + ' m up' + (ctx.zoomKnown === false ? ' (zoom unknown)' : ''),
+      'Hold the phone higher, about 4 ft (1.2 m) above the paper. Thick tools look too big from close up.');
+    add('detail', resOk, 'Enough detail', pxPerMm.toFixed(1) + ' px/mm', ctx.canZoom ? 'Tap 2× so the paper fills more of the frame.' : 'Fill more of the frame with the paper (zoom in if your camera can), without cutting off a corner.');
+
+    // inside the paper: item (dark blob), printing (dark speckle), light evenness
+    var qi = shrinkQ(q, 0.985), qe = shrinkQ(q, 1 - 2 * T.itemEdge), inPaper = new Uint8Array(N), paperPx = 0;
+    var bx0 = Math.max(0, Math.floor(Math.min(q[0][0], q[3][0]))), bx1 = Math.min(W - 1, Math.ceil(Math.max(q[1][0], q[2][0])));
+    var by0 = Math.max(0, Math.floor(Math.min(q[0][1], q[1][1]))), by1 = Math.min(H - 1, Math.ceil(Math.max(q[2][1], q[3][1])));
+    bx0 = Math.max(0, Math.floor(Math.min.apply(null, q.map(function (p) { return p[0]; })))); bx1 = Math.min(W - 1, Math.ceil(Math.max.apply(null, q.map(function (p) { return p[0]; }))));
+    by0 = Math.max(0, Math.floor(Math.min.apply(null, q.map(function (p) { return p[1]; })))); by1 = Math.min(H - 1, Math.ceil(Math.max.apply(null, q.map(function (p) { return p[1]; }))));
+    var dark = new Uint8Array(N), quads = [[0, 0], [0, 0], [0, 0], [0, 0]], cxq = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4, cyq = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
+    for (y = by0; y <= by1; y++) for (var x = bx0; x <= bx1; x++) {
+      if (!inside(qi, x + .5, y + .5)) continue;
+      var p = y * W + x; inPaper[p] = 1; paperPx++;
+      if (!bright[p]) dark[p] = 1;
+      else { var k = (x < cxq ? 0 : 1) + (y < cyq ? 0 : 2); quads[k][0] += lum[p]; quads[k][1]++; }
+    }
+    var item = largest(dark, W, H, 1, inPaper), itemFrac = item.n / Math.max(1, paperPx);
+    var darkTotal = 0; for (i = 0; i < N; i++) darkTotal += dark[i];
+    // printing: paper pixels clearly darker than their neighbourhood (text, lines), away from the item
+    var ii = new Float64Array((W + 1) * (H + 1));
+    for (y = 0; y < H; y++) { var rs = 0; for (x = 0; x < W; x++) { rs += lum[y * W + x]; ii[(y + 1) * (W + 1) + x + 1] = ii[y * (W + 1) + x + 1] + rs; } }
+    var R = Math.max(2, Math.round(Math.max(W, H) / 110)), padX = 0, padY = 0;
+    var ibx = [W, H, -1, -1]; item.list.forEach(function (p) { var x = p % W, y = (p - x) / W; if (x < ibx[0]) ibx[0] = x; if (y < ibx[1]) ibx[1] = y; if (x > ibx[2]) ibx[2] = x; if (y > ibx[3]) ibx[3] = y; });
+    padX = (ibx[2] - ibx[0]) * 0.08 + 2; padY = (ibx[3] - ibx[1]) * 0.08 + 2;
+    var qs = shrinkQ(q, 0.93), inkPx = 0, inkN = 0;
+    for (y = by0 + R; y <= by1 - R; y++) for (x = bx0 + R; x <= bx1 - R; x++) {
+      p = y * W + x; if (!inPaper[p] || !inside(qs, x + .5, y + .5)) continue;
+      if (x >= ibx[0] - padX && x <= ibx[2] + padX && y >= ibx[1] - padY && y <= ibx[3] + padY) continue;
+      var x0 = x - R, x1 = x + R + 1, y0 = y - R, y1 = y + R + 1;
+      var mean = (ii[y1 * (W + 1) + x1] - ii[y0 * (W + 1) + x1] - ii[y1 * (W + 1) + x0] + ii[y0 * (W + 1) + x0]) / ((2 * R + 1) * (2 * R + 1));
+      inkN++; if (lum[p] < mean - 14) inkPx++;
+    }
+    var speck = inkPx / Math.max(1, inkN);
+    out.ink = speck;
+    var touch = 0, ib = [W, H, -1, -1];
+    item.list.forEach(function (p) { var x = p % W, y = (p - x) / W; if (!inside(qe, x + .5, y + .5)) touch++; if (x < ib[0]) ib[0] = x; if (y < ib[1]) ib[1] = y; if (x > ib[2]) ib[2] = x; if (y > ib[3]) ib[3] = y; });
+    out.item = item.n ? { box: ib, frac: itemFrac, list: item.list } : null;
+    add('item', itemFrac >= T.itemMin, 'Tool on the paper', Math.round(itemFrac * 100) + '% of sheet', 'Put the tool in the middle of the sheet. Shiny or white tools need a colored sheet of paper.');
+    add('clear', item.n > 0 && touch / Math.max(1, item.n) < 0.01, 'Tool clear of the paper edge', touch ? 'touching' : 'clear', 'Move the tool so a finger-width of paper shows all around it. Coil cables and straps on top or beside it on the paper.');
+    add('plain', speck <= T.busy, 'Plain paper', (speck * 100).toFixed(2) + '% printed', 'Flip the sheet to a blank side or use clean printer paper. Printing confuses the outline.');
+    var qm = quads.filter(function (a) { return a[1] > 20; }).map(function (a) { return a[0] / a[1]; });
+    var evenV = qm.length >= 2 ? (Math.max.apply(null, qm) - Math.min.apply(null, qm)) / (Math.max.apply(null, qm) || 1) : 1;
+    add('light', evenV <= T.light, 'Even light, no hard shadow', Math.round(evenV * 100) + '% difference', 'Turn on a room light or step so your shadow is not on the paper. Avoid direct sun.');
+
+    // sharpness: mean absolute Laplacian on the paper region
+    var lap = 0, ln = 0;
+    for (y = by0 + 1; y < by1; y += 1) for (x = bx0 + 1; x < bx1; x += 1) {
+      p = y * W + x; if (!inPaper[p]) continue;
+      var L = 4 * lum[p] - lum[p - 1] - lum[p + 1] - lum[p - W] - lum[p + W]; lap += L * L; ln++;
+    }
+    var sharp = Math.sqrt(lap / Math.max(1, ln));
+    out.sharp = sharp;
+    add('sharp', sharp >= T.sharp, 'In focus, holding still', sharp.toFixed(0), 'Hold still for a second. Tap the screen on the tool to focus.');
+
+    out.ready = out.checks.every(function (c) { return c.ok; });
+    return out;
+  }
+
+  root.HufnorCam = { analyze: analyze, T: T, PAPER: PAPER };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* Photo coach. Needs HufnorCam.analyze (camcheck.js, inlined above this script). */
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  var stage = $('camStage'), video = $('camVideo'), ov = $('camOverlay'), shot = $('camShot'), list = $('camList');
+  var stream = null, track = null, raf = 0, tilt = null, steady = 0, lastT = 0, zoom = 1, zoomKnown = false, capLong = 0, canZoom = false, lastRes = null, busy = false;
+  var proc = document.createElement('canvas'), pctx = proc.getContext('2d', { willReadFrequently: true });
+  var NEED = 8; // consecutive good frames (~1.2 s)
+  var ORDER = ['paper', 'corners', 'level', 'distance', 'detail', 'item', 'clear', 'plain', 'light', 'sharp'];
+  var LABELS = { paper: 'Paper in view', corners: 'All 4 corners showing', level: 'Pointing straight down', distance: 'Far enough away', detail: 'Enough detail', item: 'Tool on the paper', clear: 'Tool clear of the paper edge', plain: 'Plain paper', light: 'Even light, no hard shadow', sharp: 'In focus, holding still' };
+
+  function renderList(res) {
+    var by = {}; (res ? res.checks : []).forEach(function (c) { by[c.id] = c; });
+    list.innerHTML = '';
+    ORDER.forEach(function (id) {
+      var c = by[id], li = document.createElement('li');
+      li.className = c ? (c.ok ? 'ok' : 'bad') : '';
+      var i = document.createElement('i'), sp = document.createElement('span'), cd = document.createElement('code');
+      sp.textContent = c ? c.label : LABELS[id];
+      if (c && !c.ok) { var sm = document.createElement('small'); sm.textContent = c.tip; sp.appendChild(sm); }
+      cd.textContent = c ? c.value : '—';
+      li.appendChild(i); li.appendChild(sp); li.appendChild(cd); list.appendChild(li);
+    });
+  }
+  renderList(null);
+
+  function banner(res) {
+    var b = $('camBanner'), t = $('camBannerText'); b.hidden = false;
+    if (!res) { b.className = 'cam-banner'; t.textContent = 'Looking for the paper…'; return; }
+    var bad = res.checks.filter(function (c) { return !c.ok; });
+    if (!bad.length) { b.className = 'cam-banner ok'; t.textContent = 'Hold still…'; }
+    else { b.className = 'cam-banner bad'; t.textContent = bad[0].tip; }
+  }
+
+  function drawOverlay(res, srcW, srcH) {
+    ov.width = stage.clientWidth * devicePixelRatio; ov.height = stage.clientHeight * devicePixelRatio;
+    var g = ov.getContext('2d'); g.clearRect(0, 0, ov.width, ov.height);
+    if (!res || !res.quad) return;
+    var k = Math.min(ov.width / srcW, ov.height / srcH), ox = (ov.width - srcW * k) / 2, oy = (ov.height - srcH * k) / 2, s = (srcW / res.W) * k;
+    g.lineWidth = 3 * devicePixelRatio; g.strokeStyle = res.ready ? '#46C27A' : '#E0654C';
+    g.beginPath(); res.quad.forEach(function (p, i) { var x = ox + p[0] * s, y = oy + p[1] * s; if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.closePath(); g.stroke();
+    if (res.item) { var b = res.item.box; g.setLineDash([6 * devicePixelRatio, 6 * devicePixelRatio]); g.strokeStyle = '#E3B35E'; g.strokeRect(ox + b[0] * s, oy + b[1] * s, (b[2] - b[0] + 1) * s, (b[3] - b[1] + 1) * s); g.setLineDash([]); }
+  }
+
+  function debug(res, extra) {
+    $('camDebug').textContent = JSON.stringify(Object.assign({
+      ready: res && res.ready, paper: res && res.paper, heightMm: res && Math.round(res.heightMm || 0), pxPerMm: res && +(res.pxPerMm || 0).toFixed(2),
+      sharp: res && +(res.sharp || 0).toFixed(1), ink: res && +((res.ink || 0) * 100).toFixed(2), threshold: res && res.threshold,
+      tiltDeg: tilt == null ? null : +tilt.toFixed(1), zoom: zoom, zoomKnown: zoomKnown, captureLongPx: capLong
+    }, extra || {}, { checks: res ? res.checks.map(function (c) { return c.id + ':' + (c.ok ? 'ok' : 'no') + ' (' + c.value + ')'; }) : [] , thresholds: HufnorCam.T }), null, 1);
+  }
+
+  function analyzeSource(src, w, h, ctxExtra) {
+    var k = 320 / Math.max(w, h); proc.width = Math.round(w * k); proc.height = Math.round(h * k);
+    pctx.drawImage(src, 0, 0, proc.width, proc.height);
+    var fr = pctx.getImageData(0, 0, proc.width, proc.height);
+    return HufnorCam.analyze(fr, Object.assign({ paper: $('camPaper').value }, ctxExtra));
+  }
+
+  function loop(t) {
+    raf = requestAnimationFrame(loop);
+    if (t - lastT < 140 || !video.videoWidth || busy) return; lastT = t;
+    var res = analyzeSource(video, video.videoWidth, video.videoHeight, { tilt: tilt, zoom: zoom, zoomKnown: zoomKnown, captureLong: Math.max(video.videoWidth, video.videoHeight), canZoom: canZoom, minPxPerMm: (canZoom || /tele/i.test(track && track.label || '')) ? 4 : 2.5 });
+    lastRes = res; capLong = Math.max(video.videoWidth, video.videoHeight);
+    renderList(res); banner(res); drawOverlay(res, video.videoWidth, video.videoHeight); debug(res);
+    steady = res.ready ? steady + 1 : 0;
+    $('camMeter').firstChild.style.width = Math.min(100, steady / NEED * 100) + '%';
+    if (steady >= NEED) capture('auto');
+  }
+
+  function capture(why) {
+    if (!video.videoWidth) return;
+    busy = true; cancelAnimationFrame(raf);
+    var c = document.createElement('canvas'); c.width = video.videoWidth; c.height = video.videoHeight;
+    c.getContext('2d').drawImage(video, 0, 0);
+    var res = lastRes;
+    c.toBlob(function (b) {
+      var url = URL.createObjectURL(b); shot.src = url; shot.hidden = false; video.hidden = true; ov.hidden = false;
+      $('camSave').href = url; $('camResult').hidden = false; $('camMeter').hidden = true;
+      $('camBanner').className = 'cam-banner ' + (res && res.ready ? 'ok' : 'bad');
+      $('camBannerText').textContent = why === 'auto' ? 'Photo taken. Every check passed.' : 'Photo taken by hand' + (res && !res.ready ? ', with checks still red.' : '.');
+      $('camResNote').textContent = c.width + ' × ' + c.height + ' px' + (res && res.pxPerMm ? ', about ' + res.pxPerMm.toFixed(1) + ' px per mm on the paper' : '') + (res && res.heightMm ? ', phone about ' + (res.heightMm / 1000).toFixed(2) + ' m up.' : '.') + ' This is a video frame, so it is a little softer than a normal photo.';
+      stopStream();
+    }, 'image/jpeg', 0.95);
+  }
+
+  function stopStream() { cancelAnimationFrame(raf); if (stream) stream.getTracks().forEach(function (tr) { tr.stop(); }); stream = null; track = null; }
+
+  function motion() {
+    function onOri(e) { if (e.beta == null) return; tilt = Math.hypot(e.beta, e.gamma); }
+    try {
+      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        return DeviceOrientationEvent.requestPermission().then(function (s) { if (s === 'granted') window.addEventListener('deviceorientation', onOri); }).catch(function () {});
+      }
+      if (window.DeviceOrientationEvent) window.addEventListener('deviceorientation', onOri);
+    } catch (e) {}
+    return Promise.resolve();
+  }
+
+  function lensFactor(label) { // rough 26 mm-equivalent multipliers from the device's own lens names
+    label = (label || '').toLowerCase();
+    if (/ultra ?wide/.test(label)) return 0.5;
+    if (/tele/.test(label)) return 3; // iPhone Pro telephoto is 2x-5x depending on model: treat as rough
+    return 1;
+  }
+
+  function start(deviceId) {
+    stopStream(); busy = false; steady = 0;
+    var c = { audio: false, video: deviceId ? { deviceId: { exact: deviceId }, width: { ideal: 4032 }, height: { ideal: 3024 } } : { facingMode: { ideal: 'environment' }, width: { ideal: 4032 }, height: { ideal: 3024 } } };
+    return navigator.mediaDevices.getUserMedia(c).then(function (s) {
+      stream = s; track = s.getVideoTracks()[0];
+      video.srcObject = s; video.hidden = false; shot.hidden = true; ov.hidden = false; $('camIdle').hidden = true; $('camTools').hidden = false; $('camMeter').hidden = false; $('camResult').hidden = true;
+      var caps = track.getCapabilities ? track.getCapabilities() : {}, set = track.getSettings ? track.getSettings() : {};
+      canZoom = !!caps.zoom;
+      var lf = lensFactor(track.label);
+      zoom = (set.zoom || 1) * lf; zoomKnown = !/tele/i.test(track.label || '');
+      buildLenses(caps, set);
+      return video.play();
+    }).then(function () { raf = requestAnimationFrame(loop); });
+  }
+
+  function buildLenses(caps, set) {
+    var box = $('camLenses'); box.innerHTML = '';
+    if (caps.zoom) {
+      [1, 2, 3].filter(function (z) { return z >= caps.zoom.min && z <= caps.zoom.max; }).forEach(function (z) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'cam-chip'; b.textContent = z + '×'; b.setAttribute('aria-pressed', Math.abs((set.zoom || 1) - z) < 0.05);
+        b.addEventListener('click', function () { track.applyConstraints({ advanced: [{ zoom: z }] }).then(function () { zoom = z * lensFactor(track.label); Array.prototype.forEach.call(box.children, function (x) { x.setAttribute('aria-pressed', x === b); }); }).catch(function () {}); });
+        box.appendChild(b);
+      });
+      return;
+    }
+    navigator.mediaDevices.enumerateDevices().then(function (ds) {
+      var cams = ds.filter(function (d) { return d.kind === 'videoinput' && /back|rear|environment|camera/i.test(d.label || ''); });
+      if (cams.length < 2) return;
+      cams.forEach(function (d) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'cam-chip'; b.textContent = (d.label || 'Camera').replace(/^Back\s*/i, '').replace(/ Camera$/i, '') || 'Main';
+        b.setAttribute('aria-pressed', track && track.getSettings && track.getSettings().deviceId === d.deviceId);
+        b.addEventListener('click', function () { start(d.deviceId).catch(fail); });
+        box.appendChild(b);
+      });
+    });
+  }
+
+  function fail(e) {
+    $('camIdle').hidden = false; video.hidden = true;
+    var p = $('camIdle').querySelector('p');
+    p.textContent = (e && e.name === 'NotAllowedError') ? 'Camera access was blocked. Allow the camera for this site in your browser settings, or check a photo you already took (below).' :
+      !window.isSecureContext ? 'The camera only works on a secure (https) page.' : 'The camera did not start (' + (e && (e.name || e.message) || 'unknown') + '). You can still check a photo you already took (below).';
+  }
+
+  $('camStart').addEventListener('click', function () {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { fail({ name: 'NoMedia' }); return; }
+    motion().then(function () { return start(); }).catch(fail);
+  });
+  $('camStop').addEventListener('click', function () { stopStream(); $('camIdle').hidden = false; video.hidden = true; $('camTools').hidden = true; $('camBanner').hidden = true; $('camMeter').hidden = true; });
+  $('camSnap').addEventListener('click', function () { capture('manual'); });
+  $('camRetake').addEventListener('click', function () { $('camResult').hidden = true; start().catch(fail); });
+  $('camPaper').addEventListener('change', function () { steady = 0; });
+
+  // still photos: same checks, zoom read from the photo's own EXIF (35 mm-equivalent focal length)
+  function exifZoom(buf) {
+    try {
+      var v = new DataView(buf); if (v.getUint16(0) !== 0xFFD8) return null;
+      var o = 2;
+      while (o < v.byteLength - 4) {
+        var m = v.getUint16(o), len = v.getUint16(o + 2);
+        if (m === 0xFFE1 && v.getUint32(o + 4) === 0x45786966) {
+          var t = o + 10, le = v.getUint16(t) === 0x4949, g16 = function (p) { return v.getUint16(p, le); }, g32 = function (p) { return v.getUint32(p, le); };
+          var ifd = t + g32(t + 4), n = g16(ifd), exif = 0;
+          for (var i = 0; i < n; i++) { var e = ifd + 2 + i * 12; if (g16(e) === 0x8769) exif = t + g32(e + 8); }
+          if (!exif) return null;
+          n = g16(exif);
+          for (i = 0; i < n; i++) { e = exif + 2 + i * 12; if (g16(e) === 0xA405) return g16(e + 8) / 26; }
+          return null;
+        }
+        o += 2 + len;
+      }
+    } catch (err) {}
+    return null;
+  }
+  $('camFile').addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return; this.value = '';
+    stopStream();
+    f.arrayBuffer().then(function (buf) {
+      var z = exifZoom(buf), url = URL.createObjectURL(f), im = new Image();
+      im.onload = function () {
+        shot.src = url; shot.hidden = false; video.hidden = true; ov.hidden = false; $('camIdle').hidden = true; $('camTools').hidden = true; $('camMeter').hidden = true;
+        var res = analyzeSource(im, im.naturalWidth, im.naturalHeight, { tilt: null, zoom: z || 1, zoomKnown: !!z, captureLong: Math.max(im.naturalWidth, im.naturalHeight) });
+        renderList(res); banner(res); drawOverlay(res, im.naturalWidth, im.naturalHeight);
+        $('camBannerText').textContent = res.ready ? 'This photo passes every check.' : res.checks.filter(function (c) { return !c.ok; })[0].tip;
+        debug(res, { file: f.name, exifZoom: z && +z.toFixed(2) });
+        $('camResult').hidden = true;
+      };
+      im.src = url;
+    });
+  });
+  window.addEventListener('hashchange', function () { if (!/^#\/camtest/.test(location.hash)) stopStream(); });
+  window.addEventListener('resize', function () { if (lastRes && !video.hidden) drawOverlay(lastRes, video.videoWidth, video.videoHeight); });
 })();
 </script>
 <!-- ============================ EDIT MODE ============================ -->
