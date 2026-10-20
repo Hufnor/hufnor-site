@@ -474,6 +474,8 @@
   .pcheck.ok{border-left-color:#46C27A}.pcheck.warn{border-left-color:var(--amber)}.pcheck.bad{border-left-color:var(--oxide-hi)}
   .pcheck .pnote{color:#8FA0AB}
   .pcheck[hidden]{display:none}
+  .tool-card .guide-btn{grid-column:1/-1;justify-self:start;margin:2px 0 4px}
+  .tool-card .guide-done{grid-column:1/-1;margin:0;font-size:13px;color:#C9D2D8;border-left:3px solid #46C27A;padding:8px 12px;background:rgba(255,255,255,.04)}
   .add-tool{grid-column:1/-1;justify-self:start;background:none;border:1px solid #3C4C58;color:var(--chalk);border-radius:2px;padding:10px 14px;cursor:pointer;font:600 10.5px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase}
   .bins-progress{grid-column:1/-1;height:4px;background:#26333D;border-radius:2px;overflow:hidden;display:none}
   .bins-progress i{display:block;height:100%;width:0;background:var(--oxide-hi);transition:width .2s}
@@ -3282,8 +3284,8 @@
 <div data-page="camtest">
   <section class="cam">
     <div class="wrap">
-      <span class="mono" style="color:var(--oxide)">Photo check · test page</span>
-      <h1>Top photo coach</h1>
+      <span class="mono" style="color:var(--oxide)" id="camKicker">Photo check · test page</span>
+      <h1 id="camH1">Top photo coach</h1>
       <p class="lede">Put the tool on a sheet of plain paper on a table, then hold your phone flat over it at about chest height. Each check turns green when it's right. Red ones need fixing; amber ones are only advice.</p>
 
       <div class="cam-stage" id="camStage">
@@ -3293,7 +3295,7 @@
         <div class="cam-meter" id="camMeter" hidden><b></b></div>
         <div class="idle" id="camIdle">
           <button class="btn btn-oxide" type="button" id="camStart">Start camera</button>
-          <p>Your browser will ask to use the camera and, on iPhone, motion sensors. Nothing is uploaded from this page.</p>
+          <p id="camIdleNote">Your browser will ask to use the camera and, on iPhone, motion sensors. Nothing is uploaded from this page.</p>
         </div>
         <div class="cam-banner" id="camBanner" hidden><i></i><span id="camBannerText">Looking for the paper…</span></div>
       </div>
@@ -3310,8 +3312,10 @@
 
       <div class="cam-result" id="camResult" hidden>
         <div class="row">
+          <button class="btn btn-oxide" type="button" id="camUse" hidden>Use this photo</button>
           <a class="btn btn-oxide" id="camSave" download="top.jpg" href="#">Save photo</a>
           <button class="btn btn-ghost" type="button" id="camRetake">Retake</button>
+          <button class="btn btn-ghost" type="button" id="camBack" hidden>Back to the form</button>
         </div>
         <p class="cam-note" id="camResNote"></p>
       </div>
@@ -4104,6 +4108,7 @@
     card.innerHTML = '<h4><span>Tool ' + n + '</span>' + (n > 1 ? '<button type="button" data-rm>Remove</button>' : '') + '</h4>' +
       '<div class="field"><label>What is it</label><input data-k="label" placeholder="DeWalt 20V impact driver, 6-in snips…"></div>' +
       '<div class="field"><label>Bin for it</label><select data-k="system"><option>Gridfinity-compatible bin</option><option>Plain tray (no grid)</option><option>Add to a bin with the tool above</option><option>Not sure, recommend one</option></select></div>' +
+      '<button type="button" class="btn btn-oxide guide-btn" data-guide>Take the photos with the live camera guide</button>' +
       '<div class="slots">' + ROLES.map(function (r) { return '<label class="slot' + (r[3] ? ' req' : '') + '" data-role="' + r[0] + '"><input type="file" accept="image/*,.heic,.heif"><b>' + r[1] + '</b><span>' + r[2] + '</span></label>'; }).join('') + '</div>' +
       '<div class="field"><label>How many</label><input data-k="qty" inputmode="numeric" value="1"></div>';
     list.appendChild(card); renumber();
@@ -4112,7 +4117,27 @@
     Array.prototype.forEach.call(list.children, function (c, i) { c.dataset.n = i + 1; c.querySelector('h4 span').textContent = 'Tool ' + (i + 1); });
     document.getElementById('binsAdd').hidden = list.children.length >= MAX_TOOLS;
   }
-  list.addEventListener('click', function (e) { var b = e.target.closest('[data-rm]'); if (b) { b.closest('.tool-card').remove(); renumber(); } });
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rm]'); if (b) { b.closest('.tool-card').remove(); renumber(); return; }
+    var g = e.target.closest('[data-guide]'); if (g) { var card = g.closest('.tool-card'); window.HufnorGuide = { card: card, n: card.dataset.n, role: 'top' }; location.hash = '#/camtest'; }
+  });
+  // used by the live camera guide: drop its photo into a card's slot exactly as if it had been picked
+  window.HufnorBins = {
+    setPhoto: function (card, role, file) {
+      var inp = card.querySelector('.slot[data-role="' + role + '"] input');
+      try { var dt = new DataTransfer(); dt.items.add(file); inp.files = dt.files; inp.dispatchEvent(new Event('change', { bubbles: true })); }
+      catch (err) { var slot = inp.closest('.slot'); slot._file = file; slot.classList.add('has'); slot.querySelector('span').textContent = file.name; var im = document.createElement('img'); im.alt = ''; im.src = URL.createObjectURL(file); slot.appendChild(im); photoCheck(slot, file); }
+    },
+    back: function (card) {
+      var c = card || (window.HufnorGuide && window.HufnorGuide.card);
+      location.hash = '#/bins';
+      setTimeout(function () {
+        var el = c || list.lastElementChild; if (!el) return; el.scrollIntoView({ block: 'center' });
+        var lab = el.querySelector('.slot[data-role="label"]');
+        if (lab && !lab.classList.contains('has')) { var n = el.querySelector('.guide-done') || document.createElement('p'); n.className = 'guide-done'; n.textContent = 'Top and side photos added. Last one (optional): tap Label to photograph the brand and model.'; el.querySelector('.slots').after(n); }
+      }, 60);
+    }
+  };
   list.addEventListener('change', function (e) {
     var inp = e.target; if (inp.type !== 'file') return;
     var slot = inp.closest('.slot'), f = inp.files[0]; slot._file = f || null;
@@ -4546,6 +4571,7 @@
     c.getContext('2d').drawImage(video, 0, 0);
     var res = lastRes;
     c.toBlob(function (b) {
+      lastFile = new File([b], (guide ? guide.role : 'top') + '.jpg', { type: 'image/jpeg' });
       var url = URL.createObjectURL(b); shot.src = url; shot.hidden = false; video.hidden = true; ov.hidden = false;
       $('camSave').href = url; $('camResult').hidden = false; $('camMeter').hidden = true;
       $('camBanner').className = 'cam-banner ' + (res && res.ready ? 'ok' : 'bad');
@@ -4632,6 +4658,7 @@
   $('camNativeIn').addEventListener('change', function () { var ev = new Event('change'); $('camFile').files = this.files; $('camFile').dispatchEvent(ev); });
   $('camFile').addEventListener('change', function () {
     var f = this.files && this.files[0]; if (!f) return; this.value = '';
+    lastFile = f;
     stopStream();
     f.arrayBuffer().then(function (buf) {
       var z = HufnorCam.exifZoom(buf), url = URL.createObjectURL(f), im = new Image();
@@ -4647,7 +4674,31 @@
       im.src = url;
     });
   });
-  window.addEventListener('hashchange', function () { if (!/^#\/camtest/.test(location.hash)) stopStream(); });
+  window.addEventListener('hashchange', function () { if (!/^#\/camtest/.test(location.hash)) stopStream(); else setGuide(); });
+
+  // ---- guided mode: opened from a tool card on the bins form; the photo goes straight into that card ----
+  var guide = null, lastFile = null, ROLE_TXT = { top: ['Photo 1 of 3', 'From above', 'Tool flat on the paper, phone flat over it at about chest height.'],
+    side: ['Photo 2 of 3', 'On its side', 'Same tool, same paper, stood on its edge so you see its thickness. Same height as before.'] };
+  function setGuide() {
+    guide = window.HufnorGuide || null;
+    $('camUse').hidden = !guide; $('camBack').hidden = !guide; $('camSave').hidden = !!guide;
+    if (!guide) { $('camKicker').textContent = 'Photo check · test page'; $('camH1').textContent = 'Top photo coach'; return; }
+    var t = ROLE_TXT[guide.role];
+    $('camKicker').textContent = 'Tool ' + guide.n + ' · ' + t[0];
+    $('camH1').textContent = t[1];
+    document.querySelector('.cam p.lede').textContent = t[2] + ' Each check turns green when it\'s right; it takes the photo by itself.';
+    $('camIdleNote').textContent = 'Your browser will ask to use the camera. Photos go into your bin request; nothing is sent until you press Send on the form.';
+    $('camUse').textContent = guide.role === 'top' ? 'Use this photo · next: side' : 'Use this photo · back to the form';
+  }
+  function resetShot() { $('camResult').hidden = true; shot.hidden = true; ov.hidden = true; $('camBanner').hidden = true; $('camIdle').hidden = false; $('camTools').hidden = true; lastFile = null; }
+  $('camUse').addEventListener('click', function () {
+    if (!guide || !lastFile || !window.HufnorBins) return;
+    window.HufnorBins.setPhoto(guide.card, guide.role, lastFile);
+    if (guide.role === 'top') { window.HufnorGuide = { card: guide.card, n: guide.n, role: 'side' }; setGuide(); resetShot(); window.scrollTo(0, 0); start().catch(fail); }
+    else { window.HufnorGuide = null; guide = null; resetShot(); window.HufnorBins.back(); }
+  });
+  $('camBack').addEventListener('click', function () { var g = guide; window.HufnorGuide = null; stopStream(); resetShot(); if (window.HufnorBins) window.HufnorBins.back(g && g.card); else location.hash = '#/bins'; });
+  setGuide();
   window.addEventListener('resize', function () { if (lastRes && !video.hidden) drawOverlay(lastRes, video.videoWidth, video.videoHeight); });
 })();
 </script>
