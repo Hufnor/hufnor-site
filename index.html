@@ -3279,7 +3279,7 @@
     <div class="wrap">
       <span class="mono" style="color:var(--oxide)">Photo check · test page</span>
       <h1>Top photo coach</h1>
-      <p class="lede">Point your phone straight down at the tool on its sheet of paper. Each check turns green when it's right, and the photo is taken by itself once everything is green for a second.</p>
+      <p class="lede">Put the tool on a sheet of plain paper on a table, then hold your phone flat over it at about chest height. Each check turns green when it's right, and the photo is taken by itself once everything is green for a second.</p>
 
       <div class="cam-stage" id="camStage">
         <video id="camVideo" playsinline muted hidden></video>
@@ -4194,7 +4194,8 @@
     edgeMargin: 0.015,    // corners must be this far (fraction of frame) from the frame edge
     tiltDeg: 5,           // phone tilt allowed (from the motion sensor)
     squareDeg: 6,         // corner angles allowed off 90 deg (used when there is no motion sensor)
-    minHeightMm: 1000,    // estimated camera height above the paper (parallax)
+    minHeightMm: 350,     // phone high enough that the whole sheet fits (table height, chest-high phone)
+    maxHeightMm: 900,     // above this, detail drops; the tracer corrects parallax from the measured height
     minPxPerMm: 4,        // resolution at capture size
     sharp: 18,            // Laplacian score
     busy: 0.02,           // dark speckle (printing) on the paper outside the item, fraction of paper area
@@ -4331,10 +4332,10 @@
     out.heightMm = heightMm;
     var capLong = ctx.captureLong || longFrame, pxPerMm = longPx * (capLong / longFrame) / paperLongMm;
     out.pxPerMm = pxPerMm;
-    var farOk = heightMm >= T.minHeightMm, resOk = pxPerMm >= (ctx.minPxPerMm || T.minPxPerMm);
-    add('distance', farOk, 'Far enough away', '≈' + (heightMm / 1000).toFixed(2) + ' m up' + (ctx.zoomKnown === false ? ' (zoom unknown)' : ''),
-      'Hold the phone higher, about 4 ft (1.2 m) above the paper. Thick tools look too big from close up.');
-    add('detail', resOk, 'Enough detail', pxPerMm.toFixed(1) + ' px/mm', ctx.canZoom ? 'Tap 2× so the paper fills more of the frame.' : 'Fill more of the frame with the paper (zoom in if your camera can), without cutting off a corner.');
+    var farOk = heightMm >= T.minHeightMm && heightMm <= T.maxHeightMm, resOk = pxPerMm >= (ctx.minPxPerMm || T.minPxPerMm);
+    add('distance', farOk, 'Phone at a good height', '≈' + Math.round(heightMm / 10) + ' cm up' + (ctx.zoomKnown === false ? ' (lens unknown)' : ''),
+      heightMm < T.minHeightMm ? 'Raise the phone a little, to about chest height over the table.' : 'Bring the phone a little lower, to about chest height over the table.');
+    add('detail', resOk, 'Enough detail', pxPerMm.toFixed(1) + ' px/mm', ctx.canZoom ? 'Bring the phone closer or tap 2× so the paper fills more of the frame.' : 'Bring the phone a little closer so the paper fills more of the frame, without cutting off a corner.');
 
     // inside the paper: item (dark blob), printing (dark speckle), light evenness
     var qi = shrinkQ(q, 0.985), qe = shrinkQ(q, 1 - 2 * T.itemEdge), inPaper = new Uint8Array(N), paperPx = 0;
@@ -4405,7 +4406,7 @@
   var proc = document.createElement('canvas'), pctx = proc.getContext('2d', { willReadFrequently: true });
   var NEED = 8; // consecutive good frames (~1.2 s)
   var ORDER = ['paper', 'corners', 'level', 'distance', 'detail', 'item', 'clear', 'plain', 'light', 'sharp'];
-  var LABELS = { paper: 'Paper in view', corners: 'All 4 corners showing', level: 'Pointing straight down', distance: 'Far enough away', detail: 'Enough detail', item: 'Tool on the paper', clear: 'Tool clear of the paper edge', plain: 'Plain paper', light: 'Even light, no hard shadow', sharp: 'In focus, holding still' };
+  var LABELS = { paper: 'Paper in view', corners: 'All 4 corners showing', level: 'Pointing straight down', distance: 'Phone at a good height', detail: 'Enough detail', item: 'Tool on the paper', clear: 'Tool clear of the paper edge', plain: 'Plain paper', light: 'Even light, no hard shadow', sharp: 'In focus, holding still' };
 
   function renderList(res) {
     var by = {}; (res ? res.checks : []).forEach(function (c) { by[c.id] = c; });
@@ -4458,7 +4459,7 @@
   function loop(t) {
     raf = requestAnimationFrame(loop);
     if (t - lastT < 140 || !video.videoWidth || busy) return; lastT = t;
-    var res = analyzeSource(video, video.videoWidth, video.videoHeight, { tilt: tilt, zoom: zoom, zoomKnown: zoomKnown, captureLong: Math.max(video.videoWidth, video.videoHeight), canZoom: canZoom, minPxPerMm: (canZoom || /tele/i.test(track && track.label || '')) ? 4 : 2.5 });
+    var res = analyzeSource(video, video.videoWidth, video.videoHeight, { tilt: tilt, zoom: zoom, zoomKnown: zoomKnown, captureLong: Math.max(video.videoWidth, video.videoHeight), canZoom: canZoom, minPxPerMm: 4 });
     lastRes = res; capLong = Math.max(video.videoWidth, video.videoHeight);
     renderList(res); banner(res); drawOverlay(res, video.videoWidth, video.videoHeight); debug(res);
     steady = res.ready ? steady + 1 : 0;
