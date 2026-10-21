@@ -4421,9 +4421,9 @@
     item.list.forEach(function (p) { var x = p % W, y = (p - x) / W; if (!inside(qe, x + .5, y + .5)) touch++; if (x < ib[0]) ib[0] = x; if (y < ib[1]) ib[1] = y; if (x > ib[2]) ib[2] = x; if (y > ib[3]) ib[3] = y; });
     out.item = item.n ? { box: ib, frac: itemFrac, list: item.list } : null;
     add('item', itemFrac >= T.itemMin && itemFrac <= 0.7, 'Tool on the paper', Math.round(itemFrac * 100) + '% of sheet',
-        itemFrac > 0.7 ? 'Can’t tell the tool from the paper. Use a plain sheet with no printing, and keep it flat.' : 'Put the tool in the middle of the sheet. Shiny or white tools need a colored sheet of paper.');
+        itemFrac > 0.7 ? 'Writing on the sheet makes the tool hard to see here. It will still work; a blank sheet or the clean side is better.' : 'Put the tool in the middle of the sheet. Shiny or white tools need a colored sheet of paper.');
     add('clear', item.n > 0 && touch / Math.max(1, item.n) < 0.01, 'Tool clear of the paper edge', touch ? 'touching' : 'clear', 'Move the tool so a finger-width of paper shows all around it. Coil cables and straps on top or beside it on the paper.');
-    add('plain', speck <= T.busy, 'Plain paper', (speck * 100).toFixed(2) + '% printed', 'Flip the sheet to a blank side or use clean printer paper. Printing confuses the outline.');
+    add('plain', speck <= T.busy, 'Plain paper', (speck * 100).toFixed(2) + '% printed', 'Writing on the sheet is OK. A blank side traces cleanest if you have one.');
     var qm = quads.filter(function (a) { return a[1] > 20; }).map(function (a) { return a[0] / a[1]; });
     var evenV = qm.length >= 2 ? (Math.max.apply(null, qm) - Math.min.apply(null, qm)) / (Math.max.apply(null, qm) || 1) : 1;
     add('light', evenV <= T.light, 'Even light, no hard shadow', Math.round(evenV * 100) + '% difference', 'Turn on a room light or step so your shadow is not on the paper. Avoid direct sun.');
@@ -4439,6 +4439,7 @@
     add('sharp', sharp >= T.sharp, 'In focus, holding still', sharp.toFixed(0), 'Hold still for a second. Tap the screen on the tool to focus.');
 
     var ADVISORY = { plain: 1, light: 1, sharp: 1 };
+    if (itemFrac > 0.7) ADVISORY.item = 1;   // tool merged with printing at preview size: warn, the real trace copes
     out.checks.forEach(function (c) { c.core = !ADVISORY[c.id]; });
     out.ready = out.checks.every(function (c) { return c.ok || !c.core; });   // advisory checks warn but never block
     out.perfect = out.checks.every(function (c) { return c.ok; });
@@ -4579,10 +4580,10 @@
     var still = true;
     if (res.quad && lastQuad) { var dmax = 0, diag = Math.hypot(res.W, res.H); res.quad.forEach(function (p, i) { dmax = Math.max(dmax, Math.hypot(p[0] - lastQuad[i][0], p[1] - lastQuad[i][1]) / diag); }); still = dmax <= MOVE; }
     lastQuad = res.quad || null;
-    var plain = res.checks.every(function (c) { return c.id !== 'plain' || c.ok; });
-    steady = res.ready && still && plain ? steady + 1 : 0;
-    if (res.ready && !plain) $('camBannerText').textContent = 'Almost: use a plain sheet (no printing) and it will take the photo.';
-    else if (res.ready && steady > 0 && steady < NEED) $('camBannerText').textContent = 'Hold still… ' + Math.ceil((NEED - steady) * 0.14) + ' s';
+    // printed paper is only advice: the tracer on our side separates the tool from writing (FW65 was traced on a
+    // printed sheet and its width came out within 0.8 mm), so it never blocks the photo
+    steady = res.ready && still ? steady + 1 : 0;
+    if (res.ready && steady > 0 && steady < NEED) $('camBannerText').textContent = 'Hold still… ' + Math.ceil((NEED - steady) * 0.14) + ' s';
     $('camMeter').firstChild.style.width = Math.min(100, steady / NEED * 100) + '%';
     $('camNative').hidden = !lowRes;
     $('camNative').classList.toggle('btn-oxide', res.ready); $('camNative').classList.toggle('btn-ghost', !res.ready);
